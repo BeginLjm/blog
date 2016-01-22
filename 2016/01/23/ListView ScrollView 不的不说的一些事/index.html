@@ -41,7 +41,7 @@
 <link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Android,PopupWindow," />
+  <meta name="keywords" content="Android," />
 
 
 
@@ -57,19 +57,16 @@
 
 
 
-<meta name="description" content="记得第一次使用PopupWindow是写一个按钮点击后弹出菜单的小玩意。那时候最纠结的就是PopupWindow显示的位置总是不尽人意。那时候试过这些方法：
-123456// 相对某个控件的位置（正左下方），无偏移量PopupWindow.showAsDropDown(View anchor)// 相对某个控件的位置，有偏移，xoff 为 X 轴的偏移量，yoff 为 Y 轴的偏移量">
+<meta name="description">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用PopupWindow的遇到的一些小问题">
-<meta property="og:url" content="http://yoursite.com/2015/08/01/原-关于使用PopupWindow的遇到的一些小问题/index.html">
+<meta property="og:title" content="ListView ScrollView 不的不说的一些事">
+<meta property="og:url" content="http://yoursite.com/2016/01/23/ListView ScrollView 不的不说的一些事/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="记得第一次使用PopupWindow是写一个按钮点击后弹出菜单的小玩意。那时候最纠结的就是PopupWindow显示的位置总是不尽人意。那时候试过这些方法：
-123456// 相对某个控件的位置（正左下方），无偏移量PopupWindow.showAsDropDown(View anchor)// 相对某个控件的位置，有偏移，xoff 为 X 轴的偏移量，yoff 为 Y 轴的偏移量">
-<meta property="og:updated_time" content="2016-01-22T16:24:22.000Z">
+<meta property="og:description">
+<meta property="og:updated_time" content="2016-01-22T16:21:42.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用PopupWindow的遇到的一些小问题">
-<meta name="twitter:description" content="记得第一次使用PopupWindow是写一个按钮点击后弹出菜单的小玩意。那时候最纠结的就是PopupWindow显示的位置总是不尽人意。那时候试过这些方法：
-123456// 相对某个控件的位置（正左下方），无偏移量PopupWindow.showAsDropDown(View anchor)// 相对某个控件的位置，有偏移，xoff 为 X 轴的偏移量，yoff 为 Y 轴的偏移量">
+<meta name="twitter:title" content="ListView ScrollView 不的不说的一些事">
+<meta name="twitter:description">
 
 
 
@@ -87,7 +84,7 @@
   };
 </script>
 
-  <title> 使用PopupWindow的遇到的一些小问题 | Hexo </title>
+  <title> ListView ScrollView 不的不说的一些事 | Hexo </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -227,7 +224,7 @@
             
             
               
-                使用PopupWindow的遇到的一些小问题
+                ListView ScrollView 不的不说的一些事
               
             
           </h1>
@@ -239,8 +236,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-08-01T07:57:21+08:00" content="2015-08-01">
-              2015-08-01
+            <time itemprop="dateCreated" datetime="2016-01-23T00:20:52+08:00" content="2016-01-23">
+              2016-01-23
             </time>
           </span>
 
@@ -250,8 +247,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/08/01/原-关于使用PopupWindow的遇到的一些小问题/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/01/原-关于使用PopupWindow的遇到的一些小问题/" itemprop="commentsCount"></span>
+                <a href="/2016/01/23/ListView ScrollView 不的不说的一些事/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/23/ListView ScrollView 不的不说的一些事/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -261,7 +258,7 @@
 
           
           
-             <span id="/2015/08/01/原-关于使用PopupWindow的遇到的一些小问题/" class="leancloud_visitors" data-flag-title="使用PopupWindow的遇到的一些小问题">
+             <span id="/2016/01/23/ListView ScrollView 不的不说的一些事/" class="leancloud_visitors" data-flag-title="ListView ScrollView 不的不说的一些事">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -281,25 +278,7 @@
       
 
       
-        <p><span style="font-size:18px">记得第一次使用PopupWindow是写一个按钮点击后弹出菜单的小玩意。那时候最纠结的就是PopupWindow显示的位置总是不尽人意。那时候试过这些方法：</span></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 相对某个控件的位置（正左下方），无偏移量</span></span><br><span class="line">PopupWindow.showAsDropDown(View anchor)</span><br><span class="line"><span class="comment">// 相对某个控件的位置，有偏移，xoff 为 X 轴的偏移量，yoff 为 Y 轴的偏移量                          </span></span><br><span class="line">PopupWindow.showAsDropDown(View anchor, <span class="keyword">int</span> xoff, <span class="keyword">int</span> yoff)</span><br><span class="line"><span class="comment">// 在父容器的什么位置，gravity 为相对位置，如：正中央 Gravity.CENTER、下方 Gravity.BOTTOM、Gravity.RIGHT|Gravity.BOTTOM 右下方等，后面两个参数为 x/y 轴的偏移量。</span></span><br><span class="line">PopupWindow.showAtLocation(View parent, <span class="keyword">int</span> gravity, <span class="keyword">int</span> x, <span class="keyword">int</span> y)</span><br></pre></td></tr></table></figure>
-<p>虽然最后是成功解决了问题。但是感觉有些时候使用起来很麻烦。因为需要通过父容器以及PopupWindow自身的大小来进行计算偏移量。最后的我解决方案是直接将PopupWindow的大小设置为全屏。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Rect outRect = <span class="keyword">new</span> Rect();</span><br><span class="line">getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);<span class="comment">//获取屏幕的大小</span></span><br><span class="line">PopupWindow popupWindow = <span class="keyword">new</span> PopupWindow(view, outRect.width(), outRect.height());<span class="comment">//设置PopupWindow的大小为除通知栏之外的全屏幕</span></span><br><span class="line">popupWindow.showAsDropDown(View.inflate(<span class="keyword">this</span>, R.layout.activity, <span class="keyword">null</span>), <span class="number">0</span>, outRect.top);<span class="comment">//设置PopupWindow的显示位置为除通知栏的全屏幕</span></span><br></pre></td></tr></table></figure>
-<p><span style="font-size:18px">这时候要注意的是。你设置成全屏大小了。不可能全屏都是你的菜单吧。所以要在空白部分放上一个空的View。还要加上点击事件。直接调用dismiss方法。以达到使PopupWindow关闭的目的。</span></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">view.findViewById(R.id.view).setOnClickListener(<span class="keyword">new</span> OnClickListener() &#123;</span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">        popupWindow.dismiss();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>这下就爽了。然后很多时候我也喜欢这么用了。因为我可以很任性的设置PopupWindow所该存在的位置。但是有有问题了。。就是对于类&#20284;一个ListView里面的Item点击弹出PopupWindow的。。因为弹出的PopupWindow一样。但是位置不一样。于是。我又老老实实的用回了相对位置的方法。。当然，使用的时候要学会具体情况具体分析昂。</p>
-<p><span style="font-size:18px"></span></p>
-<p></p>
-<p><span style="font-size:18px">然后是一些关于PopupWindow我遇到的一些小问题的解决方法：</span></p>
-<p><span style="font-size:18px">PopupWindow打开和关闭动画：</span></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">popupWindow.setAnimationStyle(R.style.AnimationPreview);<span class="comment">//设置动画文件</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">style</span> <span class="attribute">name</span>= <span class="attribute">AnimationPreview</span> &gt;</span><span class="css"></span><br><span class="line">        &lt;<span class="tag">item</span> <span class="tag">name</span>= <span class="tag">android</span><span class="pseudo">:windowEnterAnimation</span> &gt;<span class="at_rule">@<span class="keyword">anim/show_win_in&lt;/item&gt;&lt;--打开动画--&gt;</span></span><br><span class="line">        &lt;item name= android:windowExitAnimation &gt;@anim/show_win_out&lt;/item&gt;&lt;--关闭动画--&gt;&lt;/span&gt;</span><br><span class="line"></span></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>show_win_in和show_win_out里面就是最基本的动画资源文件了。</p>
-<p>PopupWindow中ListView点击无响应：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">popupWindow.setFocusable(<span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
-<p><span style="font-size:18px"></span></p>
-<p></p>
-
+        
       
     </div>
 
@@ -309,8 +288,6 @@
           
             <a href="/tags/Android/" rel="tag">#Android</a>
           
-            <a href="/tags/PopupWindow/" rel="tag">#PopupWindow</a>
-          
         </div>
       
 
@@ -318,17 +295,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/07/26/转-Java-Base64、AES、SHA1、MD5加密算法/" rel="next" title="Java Base64、AES、SHA1、MD5加密算法">
-                <i class="fa fa-chevron-left"></i> Java Base64、AES、SHA1、MD5加密算法
+              <a href="/2015/12/31/2015年总结/" rel="next" title="2015年总结">
+                <i class="fa fa-chevron-left"></i> 2015年总结
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/08/02/原-关于开发Android应用时写从图库选择头像功能时遇到的一些问题。/" rel="prev" title="开发Android应用时写从图库选择头像功能时遇到的一些问题。">
-                开发Android应用时写从图库选择头像功能时遇到的一些问题。 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -354,8 +327,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/08/01/原-关于使用PopupWindow的遇到的一些小问题/"
-           data-title="使用PopupWindow的遇到的一些小问题" data-url="http://yoursite.com/2015/08/01/原-关于使用PopupWindow的遇到的一些小问题/">
+      <div class="ds-thread" data-thread-key="2016/01/23/ListView ScrollView 不的不说的一些事/"
+           data-title="ListView ScrollView 不的不说的一些事" data-url="http://yoursite.com/2016/01/23/ListView ScrollView 不的不说的一些事/">
       </div>
     
   </div>
