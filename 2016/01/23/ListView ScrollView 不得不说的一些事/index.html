@@ -57,16 +57,19 @@
 
 
 
-<meta name="description">
+<meta name="description" content="因为其实也不是第一次遇到这样的问题了.即便是第二次遇到这个问题.依然是让我头疼不已.很多时候会遇到一些需求是需要在 ScrollView 中嵌套 ListView 的.对于这种情况我熟悉的有两种解决方案
+ScrollView 中嵌套 ListView1.将 ListView 之外的部分作为 ListView 中的一部分.这个方法是在getView中对 position 进行判断并处理。这个方法能满">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ListView ScrollView 不的不说的一些事">
-<meta property="og:url" content="http://yoursite.com/2016/01/23/ListView ScrollView 不的不说的一些事/index.html">
+<meta property="og:title" content="ListView ScrollView 不得不说的一些事">
+<meta property="og:url" content="http://yoursite.com/2016/01/23/ListView ScrollView 不得不说的一些事/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description">
-<meta property="og:updated_time" content="2016-01-22T16:21:42.000Z">
+<meta property="og:description" content="因为其实也不是第一次遇到这样的问题了.即便是第二次遇到这个问题.依然是让我头疼不已.很多时候会遇到一些需求是需要在 ScrollView 中嵌套 ListView 的.对于这种情况我熟悉的有两种解决方案
+ScrollView 中嵌套 ListView1.将 ListView 之外的部分作为 ListView 中的一部分.这个方法是在getView中对 position 进行判断并处理。这个方法能满">
+<meta property="og:updated_time" content="2016-01-22T18:21:10.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ListView ScrollView 不的不说的一些事">
-<meta name="twitter:description">
+<meta name="twitter:title" content="ListView ScrollView 不得不说的一些事">
+<meta name="twitter:description" content="因为其实也不是第一次遇到这样的问题了.即便是第二次遇到这个问题.依然是让我头疼不已.很多时候会遇到一些需求是需要在 ScrollView 中嵌套 ListView 的.对于这种情况我熟悉的有两种解决方案
+ScrollView 中嵌套 ListView1.将 ListView 之外的部分作为 ListView 中的一部分.这个方法是在getView中对 position 进行判断并处理。这个方法能满">
 
 
 
@@ -84,7 +87,7 @@
   };
 </script>
 
-  <title> ListView ScrollView 不的不说的一些事 | Hexo </title>
+  <title> ListView ScrollView 不得不说的一些事 | Hexo </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -224,7 +227,7 @@
             
             
               
-                ListView ScrollView 不的不说的一些事
+                ListView ScrollView 不得不说的一些事
               
             
           </h1>
@@ -247,8 +250,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/01/23/ListView ScrollView 不的不说的一些事/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/23/ListView ScrollView 不的不说的一些事/" itemprop="commentsCount"></span>
+                <a href="/2016/01/23/ListView ScrollView 不得不说的一些事/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/23/ListView ScrollView 不得不说的一些事/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -258,7 +261,7 @@
 
           
           
-             <span id="/2016/01/23/ListView ScrollView 不的不说的一些事/" class="leancloud_visitors" data-flag-title="ListView ScrollView 不的不说的一些事">
+             <span id="/2016/01/23/ListView ScrollView 不得不说的一些事/" class="leancloud_visitors" data-flag-title="ListView ScrollView 不得不说的一些事">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -278,7 +281,13 @@
       
 
       
-        
+        <p>因为其实也不是第一次遇到这样的问题了.即便是第二次遇到这个问题.依然是让我头疼不已.<br>很多时候会遇到一些需求是需要在 ScrollView 中嵌套 ListView 的.对于这种情况我熟悉的有两种解决方案</p>
+<h1 id="ScrollView__u4E2D_u5D4C_u5957_ListView"><a href="#ScrollView__u4E2D_u5D4C_u5957_ListView" class="headerlink" title="ScrollView 中嵌套 ListView"></a>ScrollView 中嵌套 ListView</h1><h2 id="1-_u5C06_ListView__u4E4B_u5916_u7684_u90E8_u5206_u4F5C_u4E3A_ListView__u4E2D_u7684_u4E00_u90E8_u5206"><a href="#1-_u5C06_ListView__u4E4B_u5916_u7684_u90E8_u5206_u4F5C_u4E3A_ListView__u4E2D_u7684_u4E00_u90E8_u5206" class="headerlink" title="1.将 ListView 之外的部分作为 ListView 中的一部分."></a>1.将 ListView 之外的部分作为 ListView 中的一部分.</h2><p>这个方法是在getView中对 position 进行判断并处理。<br>这个方法能满足几乎所有的情况，但是这样的话在 Adapter 中 getView 方法里的代码就过于复杂了。</p>
+<h2 id="2-_u91CD_u5199_ListView"><a href="#2-_u91CD_u5199_ListView" class="headerlink" title="2.重写 ListView"></a>2.重写 ListView</h2><p>自定义 View 继承 ListView<br>重写onMeasure方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Override</span></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 重写该方法，达到使ListView适应ScrollView的效果</span><br><span class="line"> */</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE &gt;&gt; <span class="number">2</span>, MeasureSpec.AT_MOST);</span><br><span class="line">    <span class="keyword">super</span>.onMeasure(widthMeasureSpec, expandSpec);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个方法我暂时发现了一个问题，就是在初次加载的时候会加载一次 ListView 中所有的 View，虽然通过在 Adapter 中使用 convertView 可以避免内存溢出,但是在 Count 数量很大的情况下会消耗较长时间。</p>
+<p>更多方法可以<a href="http://bbs.anzhuo.cn/thread-982250-1-1.html" target="_blank" rel="external">点击这里</a>查看</p>
+<h1 id="ScrollView__u4E2D_u5D4C_u5957_ViewPage"><a href="#ScrollView__u4E2D_u5D4C_u5957_ViewPage" class="headerlink" title="ScrollView 中嵌套 ViewPage"></a>ScrollView 中嵌套 ViewPage</h1><p>在 ScrollView 中嵌套 ViewPage 会出现点击事件无响应且无法滑动的情况。<br>这时候可以重写 ScrollView<br>自定义一个 View 继承ScrollView<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyScrollView</span> <span class="keyword">extends</span> <span class="title">ScrollView</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> canScroll;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> GestureDetector mGestureDetector;</span><br><span class="line">    View.OnTouchListener mGestureListener;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyScrollView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">        mGestureDetector = <span class="keyword">new</span> GestureDetector(<span class="keyword">new</span> YScrollDetector());</span><br><span class="line">        canScroll = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onInterceptTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(ev.getAction() == MotionEvent.ACTION_UP)</span><br><span class="line">            canScroll = <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onInterceptTouchEvent(ev) &amp;&amp; mGestureDetector.onTouchEvent(ev);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">YScrollDetector</span> <span class="keyword">extends</span> <span class="title">SimpleOnGestureListener</span> </span>&#123;</span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onScroll</span><span class="params">(MotionEvent e1, MotionEvent e2, <span class="keyword">float</span> distanceX, <span class="keyword">float</span> distanceY)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(canScroll)</span><br><span class="line">                <span class="keyword">if</span> (Math.abs(distanceY) &gt;= Math.abs(distanceX))</span><br><span class="line">                    canScroll = <span class="keyword">true</span>;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    canScroll = <span class="keyword">false</span>;</span><br><span class="line">            <span class="keyword">return</span> canScroll;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
       
     </div>
 
@@ -327,8 +336,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/01/23/ListView ScrollView 不的不说的一些事/"
-           data-title="ListView ScrollView 不的不说的一些事" data-url="http://yoursite.com/2016/01/23/ListView ScrollView 不的不说的一些事/">
+      <div class="ds-thread" data-thread-key="2016/01/23/ListView ScrollView 不得不说的一些事/"
+           data-title="ListView ScrollView 不得不说的一些事" data-url="http://yoursite.com/2016/01/23/ListView ScrollView 不得不说的一些事/">
       </div>
     
   </div>
@@ -464,7 +473,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ScrollView__u4E2D_u5D4C_u5957_ListView"><span class="nav-number">1.</span> <span class="nav-text">ScrollView 中嵌套 ListView</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-_u5C06_ListView__u4E4B_u5916_u7684_u90E8_u5206_u4F5C_u4E3A_ListView__u4E2D_u7684_u4E00_u90E8_u5206"><span class="nav-number">1.1.</span> <span class="nav-text">1.将 ListView 之外的部分作为 ListView 中的一部分.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-_u91CD_u5199_ListView"><span class="nav-number">1.2.</span> <span class="nav-text">2.重写 ListView</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ScrollView__u4E2D_u5D4C_u5957_ViewPage"><span class="nav-number">2.</span> <span class="nav-text">ScrollView 中嵌套 ViewPage</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">

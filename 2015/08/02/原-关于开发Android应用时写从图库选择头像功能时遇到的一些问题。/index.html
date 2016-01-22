@@ -57,22 +57,22 @@
 
 
 
-<meta name="description" content="首先是最基本的调用图库获取图像的代码。我直接贴出来。也是当个笔记吧。事实是我记不下来。。。
+<meta name="description" content="——原文——首先是最基本的调用图库获取图像的代码。我直接贴出来。也是当个笔记吧。事实是我记不下来。。。
 先是调用系统图库
-12345Intent intent = new Intent(Intent.ACTION_GET_CONTENT);intent.setType(&amp;amp;quot;image/*&amp;amp;quot;);intent.putExtra(&amp;amp;quot;crop&amp;amp;quot;,">
+12345Intent intent = new Intent(Intent.ACTION_GET_CONTENT);intent.setType(&amp;amp;quot;image/*&amp;amp;quot;);intent.putExtra(&amp;amp;quot;crop&amp;amp;q">
 <meta property="og:type" content="article">
 <meta property="og:title" content="开发Android应用时写从图库选择头像功能时遇到的一些问题。">
 <meta property="og:url" content="http://yoursite.com/2015/08/02/原-关于开发Android应用时写从图库选择头像功能时遇到的一些问题。/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="首先是最基本的调用图库获取图像的代码。我直接贴出来。也是当个笔记吧。事实是我记不下来。。。
+<meta property="og:description" content="——原文——首先是最基本的调用图库获取图像的代码。我直接贴出来。也是当个笔记吧。事实是我记不下来。。。
 先是调用系统图库
-12345Intent intent = new Intent(Intent.ACTION_GET_CONTENT);intent.setType(&amp;amp;quot;image/*&amp;amp;quot;);intent.putExtra(&amp;amp;quot;crop&amp;amp;quot;,">
-<meta property="og:updated_time" content="2016-01-22T16:36:50.000Z">
+12345Intent intent = new Intent(Intent.ACTION_GET_CONTENT);intent.setType(&amp;amp;quot;image/*&amp;amp;quot;);intent.putExtra(&amp;amp;quot;crop&amp;amp;q">
+<meta property="og:updated_time" content="2016-01-22T16:41:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="开发Android应用时写从图库选择头像功能时遇到的一些问题。">
-<meta name="twitter:description" content="首先是最基本的调用图库获取图像的代码。我直接贴出来。也是当个笔记吧。事实是我记不下来。。。
+<meta name="twitter:description" content="——原文——首先是最基本的调用图库获取图像的代码。我直接贴出来。也是当个笔记吧。事实是我记不下来。。。
 先是调用系统图库
-12345Intent intent = new Intent(Intent.ACTION_GET_CONTENT);intent.setType(&amp;amp;quot;image/*&amp;amp;quot;);intent.putExtra(&amp;amp;quot;crop&amp;amp;quot;,">
+12345Intent intent = new Intent(Intent.ACTION_GET_CONTENT);intent.setType(&amp;amp;quot;image/*&amp;amp;quot;);intent.putExtra(&amp;amp;quot;crop&amp;amp;q">
 
 
 
@@ -284,7 +284,7 @@
       
 
       
-        <p>首先是最基本的调用图库获取图像的代码。我直接贴出来。也是当个笔记吧。事实是我记不下来。。。</p>
+        <h2 id="u2014_u2014_u539F_u6587_u2014_u2014"><a href="#u2014_u2014_u539F_u6587_u2014_u2014" class="headerlink" title="——原文——"></a>——原文——</h2><p>首先是最基本的调用图库获取图像的代码。我直接贴出来。也是当个笔记吧。事实是我记不下来。。。</p>
 <p>先是调用系统图库</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Intent intent = <span class="keyword">new</span> Intent(Intent.ACTION_GET_CONTENT);</span><br><span class="line">intent.setType(&amp;quot;image<span class="comment">/*&amp;quot;);</span><br><span class="line">intent.putExtra(&amp;quot;crop&amp;quot;, true);</span><br><span class="line">intent.putExtra(&amp;quot;return-data&amp;quot;, true);</span><br><span class="line">startActivityForResult(intent, 2);</span></span><br></pre></td></tr></table></figure>
 <p>然后是获取选择到得图片的uri</p>
@@ -308,6 +308,7 @@
 <p>2.依然是通过onActivityResult来获取到返回的数据<br>这里因为会涉及到图片裁剪.所以需要做一下返回数据的判断.在上面获取图片的时候有进行标记 ‘PHOTO_REQUEST_GALLERY’ 这表示返回的是选择后的图片.还一个是 ‘PHOTO_REQUEST_CUT’ 这表示获取到裁剪后的图片.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> (requestCode) &#123;</span><br><span class="line">    <span class="keyword">case</span> PHOTO_REQUEST_GALLERY:</span><br><span class="line">        <span class="keyword">if</span> (data != <span class="keyword">null</span>) &#123;</span><br><span class="line">            startPhotoZoom(data.getData(), <span class="number">150</span>); <span class="comment">//调用裁剪图片的方法</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">case</span> PHOTO_REQUEST_CUT:</span><br><span class="line">        <span class="keyword">if</span> (data != <span class="keyword">null</span>) &#123;</span><br><span class="line">            setPicToView(data);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>3.startPhotoZoom(Uri uri, int size)方法.是根据数据和设定的 size 大小来要求用户裁剪图片.调用系统自带的裁剪图片的页面.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Intent intent = <span class="keyword">new</span> Intent(<span class="string">"com.android.camera.action.CROP"</span>);</span><br><span class="line">intent.setDataAndType(uri, <span class="string">"image/*"</span>);</span><br><span class="line"><span class="comment">// crop为true是设置在开启的intent中设置显示的view可以剪裁</span></span><br><span class="line">intent.putExtra(<span class="string">"crop"</span>, <span class="string">"true"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// aspectX aspectY 是宽高的比例</span></span><br><span class="line">intent.putExtra(<span class="string">"aspectX"</span>, <span class="number">1</span>);</span><br><span class="line">intent.putExtra(<span class="string">"aspectY"</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// outputX,outputY 是剪裁图片的宽高</span></span><br><span class="line">intent.putExtra(<span class="string">"outputX"</span>, size);</span><br><span class="line">intent.putExtra(<span class="string">"outputY"</span>, size);</span><br><span class="line">intent.putExtra(<span class="string">"return-data"</span>, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">startActivityForResult(intent, PHOTO_REQUEST_CUT);</span><br></pre></td></tr></table></figure></p>
 <p>4.获取到返回的数据进行在 2 中介绍到了<br>5.从 data 中获取数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Bundle bundle = picdata.getExtras();</span><br><span class="line"><span class="keyword">if</span> (bundle != <span class="keyword">null</span>) &#123;</span><br><span class="line">    bmp = bundle.getParcelable(<span class="string">"data"</span>);<span class="comment">//获取到图片</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>不得不说的是,通过这样的方法来获取图片的话.三星手机也能够正常获取了.PS:我真的不是在黑三星.</p>
 
       
     </div>
@@ -498,7 +499,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u2014_u20142016-1-23_u53F7_u66F4_u65B0_u2014_u2014"><span class="nav-number">1.</span> <span class="nav-text">——2016-1-23号更新——</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u2014_u2014_u539F_u6587_u2014_u2014"><span class="nav-number">1.</span> <span class="nav-text">——原文——</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#u2014_u20142016-1-23_u53F7_u66F4_u65B0_u2014_u2014"><span class="nav-number">2.</span> <span class="nav-text">——2016-1-23号更新——</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
