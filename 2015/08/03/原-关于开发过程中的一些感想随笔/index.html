@@ -1,0 +1,893 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="本来每天都是写一写技术分享的文章的，然而昨天一整天都是在修改UI上的小问题，我就随意写写这次开发过程自己的一些感受好了。
+以后我希望我能每次开个项目的时候就写一篇这样的博文。一步步记录下每一天的开发感受。
+这次开发算是比较扯淡的了。最开始不紧不慢的慢慢来。最后又出于各种原因赶工。简直累炸我了。
+这次算是第一次真正的系统性的去开发一款APP。发现了自己很多问题。
+1.代码调理不清晰。后期想修改一个功">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于开发过程中的一些感想随笔">
+<meta property="og:url" content="http://yoursite.com/2015/08/03/原-关于开发过程中的一些感想随笔/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="本来每天都是写一写技术分享的文章的，然而昨天一整天都是在修改UI上的小问题，我就随意写写这次开发过程自己的一些感受好了。
+以后我希望我能每次开个项目的时候就写一篇这样的博文。一步步记录下每一天的开发感受。
+这次开发算是比较扯淡的了。最开始不紧不慢的慢慢来。最后又出于各种原因赶工。简直累炸我了。
+这次算是第一次真正的系统性的去开发一款APP。发现了自己很多问题。
+1.代码调理不清晰。后期想修改一个功">
+<meta property="og:updated_time" content="2016-01-21T19:39:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于开发过程中的一些感想随笔">
+<meta name="twitter:description" content="本来每天都是写一写技术分享的文章的，然而昨天一整天都是在修改UI上的小问题，我就随意写写这次开发过程自己的一些感受好了。
+以后我希望我能每次开个项目的时候就写一篇这样的博文。一步步记录下每一天的开发感受。
+这次开发算是比较扯淡的了。最开始不紧不慢的慢慢来。最后又出于各种原因赶工。简直累炸我了。
+这次算是第一次真正的系统性的去开发一款APP。发现了自己很多问题。
+1.代码调理不清晰。后期想修改一个功">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 关于开发过程中的一些感想随笔 | Hexo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?11bd8a056d4f86a1f9728e2c4d88b16d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hexo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                关于开发过程中的一些感想随笔
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-08-03T09:12:55+08:00" content="2015-08-03">
+              2015-08-03
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/08/03/原-关于开发过程中的一些感想随笔/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/03/原-关于开发过程中的一些感想随笔/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2015/08/03/原-关于开发过程中的一些感想随笔/" class="leancloud_visitors" data-flag-title="关于开发过程中的一些感想随笔">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本来每天都是写一写技术分享的文章的，然而昨天一整天都是在修改UI上的小问题，我就随意写写这次开发过程自己的一些感受好了。</p>
+<p>以后我希望我能每次开个项目的时候就写一篇这样的博文。一步步记录下每一天的开发感受。</p>
+<p>这次开发算是比较扯淡的了。最开始不紧不慢的慢慢来。最后又出于各种原因赶工。简直累炸我了。</p>
+<p>这次算是第一次真正的系统性的去开发一款APP。发现了自己很多问题。</p>
+<p>1.代码调理不清晰。后期想修改一个功能，一直出问题。还以为是怎么了。后来才发现。是我自己代码没搞清楚。</p>
+<p>2.不懂善用开源框架。自己写的很多功能其实网络上都有开源的框架的。可是我都没有怎么用到。大多数时候都是自己写。写的也很low，所以我要总结一下常用的框架。以便自己以后不再犯傻。</p>
+<p>3.基础知识不牢固。怎么说呢。连最基础的Map数组遍历我都要去Google一下。真觉得我也是够可以的了。有必要好好的巩固Java基础。</p>
+<h4 id="u2014_u20142015_u5E748_u67083_u53F7_APP1-0_u5B8C_u6210_u540E"><a href="#u2014_u20142015_u5E748_u67083_u53F7_APP1-0_u5B8C_u6210_u540E" class="headerlink" title="——2015年8月3号 APP1.0完成后"></a>——2015年8月3号 APP1.0完成后</h4><p>哎。我来更新了。本来是该早上起床更新下博客的。可是因为昨天晚上实在太晚睡。然后早上一起床又开始修复bug。所以就没时间来写，其实今天真心累。今天也不知道是什么原因。遇到了很多问题</p>
+<p>1.在为很多按钮加上点击效果之后就会出现一个和XML文件有关的异常。好像是没有找到资源文件吧。完全没有任何解决的头绪。Google出来的一些解决方案也是没怎么看懂。</p>
+<p>2.OOM。这个真的不想说什么。一开始我以为只有在同一个页面内图片加载量过大才会引起OOM，然后现在更具反馈看了。好像每次finsh()掉界面但是没有释放图片资源。这样的次数多了只会也可能会导致OOM</p>
+<p>3.屏幕适配。这个、真晕了。而且遇到一个很奇葩的问题。就是UI那边给我的是1080p的图片文件。我直接随意的放到了hdpi的资源文件夹里。然后就会在ViewPage滑动的时候特别卡。放到xxhdpi的文件夹里就好了。也不知道这是为什么。哈哈哈、</p>
+<p>4.dialog。因为很多时候我的会在页面一打开的时候弹出dialog。然后我就会判断页面是否完全打开。如果打开且需要就显示dialog。但是好像在进页面后立刻返回。有概率性的会出现错误。</p>
+<p>反正约到了挺多问题的。果然还是应该先好好学习。以后要记住的就是凡是在用到BitMap之后要进行内存释放！！！</p>
+<h4 id="u2014_u20142015_u5E748_u67084_u53F7_APP_u4E0A_u7EBF_u7B2C_u4E00_u5929"><a href="#u2014_u20142015_u5E748_u67084_u53F7_APP_u4E0A_u7EBF_u7B2C_u4E00_u5929" class="headerlink" title="——2015年8月4号 APP上线第一天"></a>——2015年8月4号 APP上线第一天</h4><p>昂。我都喜欢后一天的早上更前一天的东西。。这样是不是不太好呀。不过就这样咯。毕竟睡觉之前写的话。。感觉我一下又少了好多睡觉时间呀。要不得要不得。</p>
+<p>想想昨天做了些啥。</p>
+<p>1.高德地图。居然地图抄的官方Demo还有bug。一个空指针异常的，是地图还没初始化就退出了导致的。加上了判断就解决了。</p>
+<p>2.XML文件的一些错误居然在Clean工程之后就解决了。。。好像是重新构建了索引还是连接什么的。不太懂。</p>
+<p>3.内存溢出。先是优化了一堆有Bitmap调用的页面。然后又找上美工。把所有的图片给了我三组。1080P。720P。480P三份。然后也好了很多。以后图片都要三份。要三份！</p>
+<p>4.发现我的布局文件结构写的好复杂呀。该好好看看文档，看看要不要精简优化下布局文件了。</p>
+<p>5.关于ViewPage内存释放的。发现好像我有个地方是五个页面。但是切到第三个的时候第一个的内存并没有被释放掉。。应该是要在Adapter里面做处理的。还好现在页面少。</p>
+<p>6.还是XML得问题。我太多的文字都写在布局文件里面了。规范应当是弄到String.Xml文件里面的。也方便做国际化，以后要注意！以后要注意！</p>
+<p>好像也就这些了吧。嗯。发现了好多问题。也在慢慢解决问题。O(∩_∩)O哈哈哈~</p>
+<h4 id="u2014_u20142015_u5E748_u67086_u53F7_APP_u4E0A_u7EBF_u7B2C_u4E09_u5929"><a href="#u2014_u20142015_u5E748_u67086_u53F7_APP_u4E0A_u7EBF_u7B2C_u4E09_u5929" class="headerlink" title="——2015年8月6号 APP上线第三天"></a>——2015年8月6号 APP上线第三天</h4><p>今天真难过、、肚子痛了一天。昨天晚上一点左右睡的。早上四点多就疼醒了，哎，都是因为没关风扇。还吃不下什么东西，感觉好累昂。</p>
+<p>昨天晚上发现谷歌提供了一个Navigation可以做侧滑菜单。哎，我也真是傻，谷歌官方提供的东西居然没有好好地去利用，今天读了一会文档，然后花了几个小时就把项目里面一个用到菜单的地方改成侧滑的了。然后。。有空去把谷歌的一些文档全看一遍好了。。</p>
+<p>今天还折腾了会服务器。买了个DO的vps。新加坡节点。感觉还不错。网速可以。还不丢包。。搭好了PHP和JavaWeb的环境。过明天看看做好推送服务的页面挂上去试试。</p>
+<p>其实写代码重在细心呀，╮(╯▽╰)╭。今天肚子疼，早点洗洗睡。对自己好一点，么么哒、</p>
+<h4 id="u2014_u20142015_u5E748_u670810_u53F7"><a href="#u2014_u20142015_u5E748_u670810_u53F7" class="headerlink" title="——2015年8月10号"></a>——2015年8月10号</h4><p>今天弄了个沉浸状态栏。233333.发现原来把布局中相同或相&#20284;的title提出来单独一个xml文件是一个多么棒的决定了。沉浸状态栏画了一个小时不到就弄完了。。。</p>
+<p>今天无聊想弄ss的多用户。弄了半天都没弄好。。无奈了。还废了我基本一天的时间。。。还一直以为wdcp的Apache有问题，最后居然发现是因为我自己不会用。。。23333.自己犯傻了。弄的原定今天写好的推送后台都没弄。又只能明天弄了。orz，早睡早起。早睡早起。。</p>
+<h4 id="u2014_u20142015_u5E748_u670811_u65E5"><a href="#u2014_u20142015_u5E748_u670811_u65E5" class="headerlink" title="——2015年8月11日"></a>——2015年8月11日</h4><p>看了下日期。发现我竟然十天没写过博客了。其实不算久昂。可能是最近太闲了吧。呵呵。我这人一闲起来就什么都不想干。不能闲下来的人呀。</p>
+<p>昨天吧。一直在折腾电脑。就是下了很多东西。弄弄分区什么的。但是也基本花了一天时间。哎。下午的时候看到有人反馈了一个蛮严重的bug。。刚弄好东西就赶忙找错。修复。推更新。其实心里总有种怪怪的感觉。哎。不想纠结了。</p>
+<p>其实再好好看了下MVC框架。发现自己的代码真low。有空整体得改改。</p>
+<h4 id="u2014_u20142015_u5E748_u670822_u65E5"><a href="#u2014_u20142015_u5E748_u670822_u65E5" class="headerlink" title="——2015年8月22日"></a>——2015年8月22日</h4>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/08/02/原-关于开发Android应用时写从图库选择头像功能时遇到的一些问题。/" rel="next" title="关于开发Android应用时写从图库选择头像功能时遇到的一些问题。">
+                <i class="fa fa-chevron-left"></i> 关于开发Android应用时写从图库选择头像功能时遇到的一些问题。
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/08/08/原-Android-XML文件链接错误/" rel="prev" title="Android XML文件链接错误">
+                Android XML文件链接错误 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/08/03/原-关于开发过程中的一些感想随笔/"
+           data-title="关于开发过程中的一些感想随笔" data-url="http://yoursite.com/2015/08/03/原-关于开发过程中的一些感想随笔/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/icon.png"
+               alt="BeginLu" />
+          <p class="site-author-name" itemprop="name">BeginLu</p>
+          <p class="site-description motion-element" itemprop="description">一个只会敲代码的搬砖工</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/BeginLjm" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/qiao-dai-ma-de-ban-zhuan-gong" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> Zhihu
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/2569097247" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i> Weibo
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">友情链接</p>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.zealyw.com" target="_blank">zealyw</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://halamyc.me" target="_blank">HalaMyc</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://hexo.gorgiaxx.com" target="_blank">gorgiaxx</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.primavera.wang" target="_blank">primavera</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#u2014_u20142015_u5E748_u67083_u53F7_APP1-0_u5B8C_u6210_u540E"><span class="nav-number">1.</span> <span class="nav-text">——2015年8月3号 APP1.0完成后</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u2014_u20142015_u5E748_u67084_u53F7_APP_u4E0A_u7EBF_u7B2C_u4E00_u5929"><span class="nav-number">2.</span> <span class="nav-text">——2015年8月4号 APP上线第一天</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u2014_u20142015_u5E748_u67086_u53F7_APP_u4E0A_u7EBF_u7B2C_u4E09_u5929"><span class="nav-number">3.</span> <span class="nav-text">——2015年8月6号 APP上线第三天</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u2014_u20142015_u5E748_u670810_u53F7"><span class="nav-number">4.</span> <span class="nav-text">——2015年8月10号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u2014_u20142015_u5E748_u670811_u65E5"><span class="nav-number">5.</span> <span class="nav-text">——2015年8月11日</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#u2014_u20142015_u5E748_u670822_u65E5"><span class="nav-number">6.</span> <span class="nav-text">——2015年8月22日</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=0.5.0"></script>
+
+
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"begin"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+
+  
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("wqL8UzhsyhoOfgFa9OJOYJ7f-gzGzoHsz", "7rdhlbPdQfHDIUeNwffUqBOC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+</body>
+</html>
