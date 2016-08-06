@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Java Base64、AES、SHA1、MD5加密算法 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java Base64、AES、SHA1、MD5加密算法">
+<meta property="og:url" content="http://yoursite.com/2015/07/26/转-Java-Base64、AES、SHA1、MD5加密算法/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+<meta property="og:updated_time" content="2016-01-21T19:41:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java Base64、AES、SHA1、MD5加密算法">
+<meta name="twitter:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="./css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="./" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="./">Home</a>
+        
+          <a class="main-nav-link" href="./archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-转-Java-Base64、AES、SHA1、MD5加密算法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="./2015/07/26/转-Java-Base64、AES、SHA1、MD5加密算法/" class="article-date">
+  <time datetime="2015-07-26T06:15:52.000Z" itemprop="datePublished">2015-07-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Java Base64、AES、SHA1、MD5加密算法
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DecriptTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">SHA1</span><span class="params">(String decript)</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            MessageDigest digest = java.security.MessageDigest</div><div class="line">                    .getInstance(&amp;quot;SHA-<span class="number">1</span>&amp;quot;);</div><div class="line">            digest.update(decript.getBytes());</div><div class="line">            <span class="keyword">byte</span> messageDigest[] = digest.digest();</div><div class="line">            <span class="comment">// Create Hex String</span></div><div class="line">            StringBuffer hexString = <span class="keyword">new</span> StringBuffer();</div><div class="line">            <span class="comment">// 字节数组转换为 十六进制 数</span></div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &amp;lt; messageDigest.length; i++) &#123;</div><div class="line">                String shaHex = Integer.toHexString(messageDigest[i] &amp;amp; <span class="number">0xFF</span>);</div><div class="line">                <span class="keyword">if</span> (shaHex.length() &amp;lt; <span class="number">2</span>) &#123;</div><div class="line">                    hexString.append(<span class="number">0</span>);</div><div class="line">                &#125;</div><div class="line">                hexString.append(shaHex);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> hexString.toString();</div><div class="line"></div><div class="line">        &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> &amp;quot;&amp;quot;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">SHA</span><span class="params">(String decript)</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            MessageDigest digest = java.security.MessageDigest</div><div class="line">                    .getInstance(&amp;quot;SHA&amp;quot;);</div><div class="line">            digest.update(decript.getBytes());</div><div class="line">            <span class="keyword">byte</span> messageDigest[] = digest.digest();</div><div class="line">            <span class="comment">// Create Hex String</span></div><div class="line">            StringBuffer hexString = <span class="keyword">new</span> StringBuffer();</div><div class="line">            <span class="comment">// 字节数组转换为 十六进制 数</span></div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &amp;lt; messageDigest.length; i++) &#123;</div><div class="line">                String shaHex = Integer.toHexString(messageDigest[i] &amp;amp; <span class="number">0xFF</span>);</div><div class="line">                <span class="keyword">if</span> (shaHex.length() &amp;lt; <span class="number">2</span>) &#123;</div><div class="line">                    hexString.append(<span class="number">0</span>);</div><div class="line">                &#125;</div><div class="line">                hexString.append(shaHex);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> hexString.toString();</div><div class="line"></div><div class="line">        &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> &amp;quot;&amp;quot;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">MD5</span><span class="params">(String input)</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">// 获得MD5摘要算法的 MessageDigest 对象</span></div><div class="line">            MessageDigest mdInst = MessageDigest.getInstance(&amp;quot;MD5&amp;quot;);</div><div class="line">            <span class="comment">// 使用指定的字节更新摘要</span></div><div class="line">            mdInst.update(input.getBytes());</div><div class="line">            <span class="comment">// 获得密文</span></div><div class="line">            <span class="keyword">byte</span>[] md = mdInst.digest();</div><div class="line">            <span class="comment">// 把密文转换成十六进制的字符串形式</span></div><div class="line">            StringBuffer hexString = <span class="keyword">new</span> StringBuffer();</div><div class="line">            <span class="comment">// 字节数组转换为 十六进制 数</span></div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &amp;lt; md.length; i++) &#123;</div><div class="line">                String shaHex = Integer.toHexString(md[i] &amp;amp; <span class="number">0xFF</span>);</div><div class="line">                <span class="keyword">if</span> (shaHex.length() &amp;lt; <span class="number">2</span>) &#123;</div><div class="line">                    hexString.append(<span class="number">0</span>);</div><div class="line">                &#125;</div><div class="line">                hexString.append(shaHex);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> hexString.toString();</div><div class="line">        &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> &amp;quot;&amp;quot;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 加密</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> content</div><div class="line">     *            需要加密的内容</div><div class="line">     * <span class="doctag">@param</span> password</div><div class="line">     *            加密密码</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] encryptAES(String content, String password) &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            KeyGenerator kgen = KeyGenerator.getInstance(&amp;quot;AES&amp;quot;);</div><div class="line">            kgen.init(<span class="number">128</span>, <span class="keyword">new</span> SecureRandom(password.getBytes()));</div><div class="line">            SecretKey secretKey = kgen.generateKey();</div><div class="line">            <span class="keyword">byte</span>[] enCodeFormat = secretKey.getEncoded();</div><div class="line">            SecretKeySpec key = <span class="keyword">new</span> SecretKeySpec(enCodeFormat, &amp;quot;AES&amp;quot;);</div><div class="line">            Cipher cipher = Cipher.getInstance(&amp;quot;AES&amp;quot;);<span class="comment">// 创建密码器</span></div><div class="line">            <span class="keyword">byte</span>[] byteContent = content.getBytes(&amp;quot;utf-<span class="number">8</span>&amp;quot;);</div><div class="line">            cipher.init(Cipher.ENCRYPT_MODE, key);<span class="comment">// 初始化</span></div><div class="line">            <span class="keyword">byte</span>[] result = cipher.doFinal(byteContent);</div><div class="line">            <span class="keyword">return</span> result; <span class="comment">// 加密</span></div><div class="line">        &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (NoSuchPaddingException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (InvalidKeyException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (IllegalBlockSizeException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (BadPaddingException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 解密</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> content</div><div class="line">     *            待解密内容</div><div class="line">     * <span class="doctag">@param</span> password</div><div class="line">     *            解密密钥</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] decryptAES(<span class="keyword">byte</span>[] content, String password) &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            KeyGenerator kgen = KeyGenerator.getInstance(&amp;quot;AES&amp;quot;);</div><div class="line">            kgen.init(<span class="number">128</span>, <span class="keyword">new</span> SecureRandom(password.getBytes()));</div><div class="line">            SecretKey secretKey = kgen.generateKey();</div><div class="line">            <span class="keyword">byte</span>[] enCodeFormat = secretKey.getEncoded();</div><div class="line">            SecretKeySpec key = <span class="keyword">new</span> SecretKeySpec(enCodeFormat, &amp;quot;AES&amp;quot;);</div><div class="line">            Cipher cipher = Cipher.getInstance(&amp;quot;AES&amp;quot;);<span class="comment">// 创建密码器</span></div><div class="line">            cipher.init(Cipher.DECRYPT_MODE, key);<span class="comment">// 初始化</span></div><div class="line">            <span class="keyword">byte</span>[] result = cipher.doFinal(content);</div><div class="line">            <span class="keyword">return</span> result; <span class="comment">// 加密</span></div><div class="line">        &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (NoSuchPaddingException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (InvalidKeyException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (IllegalBlockSizeException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (BadPaddingException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * BASE64解密</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> key</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     * <span class="doctag">@throws</span> Exception</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">decryptBASE64</span><span class="params">(String key)</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> &amp;quot;&amp;quot;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * BASE64加密</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> key</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     * <span class="doctag">@throws</span> Exception</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">encryptBASE64</span><span class="params">(String key)</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> &amp;quot;&amp;quot;;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>出处：<a href="http://www.open-open.com/lib/view/open1392185662160.html" target="_blank" rel="external">http://www.open-open.com/lib/view/open1392185662160.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com./2015/07/26/转-Java-Base64、AES、SHA1、MD5加密算法/" data-id="cirj42fsf000kcueo7vaezn9m" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Java/">Java</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="./2015/08/01/原-关于使用PopupWindow的遇到的一些小问题/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          使用PopupWindow的遇到的一些小问题
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="./tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/JavaWeb/">JavaWeb</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/PopupWindow/">PopupWindow</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/扯淡/">扯淡</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/黑苹果/">黑苹果</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="./tags/Android/" style="font-size: 20px;">Android</a> <a href="./tags/Java/" style="font-size: 10px;">Java</a> <a href="./tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="./tags/PopupWindow/" style="font-size: 10px;">PopupWindow</a> <a href="./tags/扯淡/" style="font-size: 10px;">扯淡</a> <a href="./tags/黑苹果/" style="font-size: 10px;">黑苹果</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="./archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/12/">December 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/08/">August 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/07/">July 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="./2016/01/23/ListView ScrollView 不得不说的一些事/">ListView ScrollView 不得不说的一些事</a>
+          </li>
+        
+          <li>
+            <a href="./2016/01/21/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="./2015/12/31/2015年总结/">2015年总结</a>
+          </li>
+        
+          <li>
+            <a href="./2015/11/05/原-记一次接口开发/">记一次接口开发</a>
+          </li>
+        
+          <li>
+            <a href="./2015/08/16/原-黑苹果系统迁移/">黑苹果系统迁移</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="./" class="mobile-nav-link">Home</a>
+  
+    <a href="./archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="./fancybox/jquery.fancybox.css">
+  <script src="./fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="./js/script.js"></script>
+
+  </div>
+</body>
+</html>

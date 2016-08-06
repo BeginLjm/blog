@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ListView ScrollView 不得不说的一些事 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="因为其实也不是第一次遇到这样的问题了.即便是第二次遇到这个问题.依然是让我头疼不已.很多时候会遇到一些需求是需要在 ScrollView 中嵌套 ListView 的.对于这种情况我熟悉的有两种解决方案
+ScrollView 中嵌套 ListView1.将 ListView 之外的部分作为 ListView 中的一部分.这个方法是在getView中对 position 进行判断并处理。这个方法能满">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ListView ScrollView 不得不说的一些事">
+<meta property="og:url" content="http://yoursite.com/2016/01/23/ListView ScrollView 不得不说的一些事/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="因为其实也不是第一次遇到这样的问题了.即便是第二次遇到这个问题.依然是让我头疼不已.很多时候会遇到一些需求是需要在 ScrollView 中嵌套 ListView 的.对于这种情况我熟悉的有两种解决方案
+ScrollView 中嵌套 ListView1.将 ListView 之外的部分作为 ListView 中的一部分.这个方法是在getView中对 position 进行判断并处理。这个方法能满">
+<meta property="og:updated_time" content="2016-01-22T18:21:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ListView ScrollView 不得不说的一些事">
+<meta name="twitter:description" content="因为其实也不是第一次遇到这样的问题了.即便是第二次遇到这个问题.依然是让我头疼不已.很多时候会遇到一些需求是需要在 ScrollView 中嵌套 ListView 的.对于这种情况我熟悉的有两种解决方案
+ScrollView 中嵌套 ListView1.将 ListView 之外的部分作为 ListView 中的一部分.这个方法是在getView中对 position 进行判断并处理。这个方法能满">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="./css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="./" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="./">Home</a>
+        
+          <a class="main-nav-link" href="./archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="listview-ListView ScrollView 不得不说的一些事" class="article article-type-listview" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="./2016/01/23/ListView ScrollView 不得不说的一些事/" class="article-date">
+  <time datetime="2016-01-22T16:20:52.000Z" itemprop="datePublished">2016-01-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ListView ScrollView 不得不说的一些事
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>因为其实也不是第一次遇到这样的问题了.即便是第二次遇到这个问题.依然是让我头疼不已.<br>很多时候会遇到一些需求是需要在 ScrollView 中嵌套 ListView 的.对于这种情况我熟悉的有两种解决方案</p>
+<h1 id="ScrollView-中嵌套-ListView"><a href="#ScrollView-中嵌套-ListView" class="headerlink" title="ScrollView 中嵌套 ListView"></a>ScrollView 中嵌套 ListView</h1><h2 id="1-将-ListView-之外的部分作为-ListView-中的一部分"><a href="#1-将-ListView-之外的部分作为-ListView-中的一部分" class="headerlink" title="1.将 ListView 之外的部分作为 ListView 中的一部分."></a>1.将 ListView 之外的部分作为 ListView 中的一部分.</h2><p>这个方法是在getView中对 position 进行判断并处理。<br>这个方法能满足几乎所有的情况，但是这样的话在 Adapter 中 getView 方法里的代码就过于复杂了。</p>
+<h2 id="2-重写-ListView"><a href="#2-重写-ListView" class="headerlink" title="2.重写 ListView"></a>2.重写 ListView</h2><p>自定义 View 继承 ListView<br>重写onMeasure方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 重写该方法，达到使ListView适应ScrollView的效果</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE &gt;&gt; <span class="number">2</span>, MeasureSpec.AT_MOST);</div><div class="line">    <span class="keyword">super</span>.onMeasure(widthMeasureSpec, expandSpec);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个方法我暂时发现了一个问题，就是在初次加载的时候会加载一次 ListView 中所有的 View，虽然通过在 Adapter 中使用 convertView 可以避免内存溢出,但是在 Count 数量很大的情况下会消耗较长时间。</p>
+<p>更多方法可以<a href="http://bbs.anzhuo.cn/thread-982250-1-1.html" target="_blank" rel="external">点击这里</a>查看</p>
+<h1 id="ScrollView-中嵌套-ViewPage"><a href="#ScrollView-中嵌套-ViewPage" class="headerlink" title="ScrollView 中嵌套 ViewPage"></a>ScrollView 中嵌套 ViewPage</h1><p>在 ScrollView 中嵌套 ViewPage 会出现点击事件无响应且无法滑动的情况。<br>这时候可以重写 ScrollView<br>自定义一个 View 继承ScrollView<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyScrollView</span> <span class="keyword">extends</span> <span class="title">ScrollView</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> canScroll;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> GestureDetector mGestureDetector;</div><div class="line">    View.OnTouchListener mGestureListener;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyScrollView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context, attrs);</div><div class="line">        mGestureDetector = <span class="keyword">new</span> GestureDetector(<span class="keyword">new</span> YScrollDetector());</div><div class="line">        canScroll = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onInterceptTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span>(ev.getAction() == MotionEvent.ACTION_UP)</div><div class="line">            canScroll = <span class="keyword">true</span>;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onInterceptTouchEvent(ev) &amp;&amp; mGestureDetector.onTouchEvent(ev);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">YScrollDetector</span> <span class="keyword">extends</span> <span class="title">SimpleOnGestureListener</span> </span>&#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onScroll</span><span class="params">(MotionEvent e1, MotionEvent e2, <span class="keyword">float</span> distanceX, <span class="keyword">float</span> distanceY)</span> </span>&#123;</div><div class="line">            <span class="keyword">if</span>(canScroll)</div><div class="line">                <span class="keyword">if</span> (Math.abs(distanceY) &gt;= Math.abs(distanceX))</div><div class="line">                    canScroll = <span class="keyword">true</span>;</div><div class="line">                <span class="keyword">else</span></div><div class="line">                    canScroll = <span class="keyword">false</span>;</div><div class="line">            <span class="keyword">return</span> canScroll;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com./2016/01/23/ListView ScrollView 不得不说的一些事/" data-id="cirj42frd0002cueoxrdr2xlh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Android/">Android</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="./2016/01/21/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="./tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/JavaWeb/">JavaWeb</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/PopupWindow/">PopupWindow</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/扯淡/">扯淡</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/黑苹果/">黑苹果</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="./tags/Android/" style="font-size: 20px;">Android</a> <a href="./tags/Java/" style="font-size: 10px;">Java</a> <a href="./tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="./tags/PopupWindow/" style="font-size: 10px;">PopupWindow</a> <a href="./tags/扯淡/" style="font-size: 10px;">扯淡</a> <a href="./tags/黑苹果/" style="font-size: 10px;">黑苹果</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="./archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/12/">December 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/08/">August 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/07/">July 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="./2016/01/23/ListView ScrollView 不得不说的一些事/">ListView ScrollView 不得不说的一些事</a>
+          </li>
+        
+          <li>
+            <a href="./2016/01/21/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="./2015/12/31/2015年总结/">2015年总结</a>
+          </li>
+        
+          <li>
+            <a href="./2015/11/05/原-记一次接口开发/">记一次接口开发</a>
+          </li>
+        
+          <li>
+            <a href="./2015/08/16/原-黑苹果系统迁移/">黑苹果系统迁移</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="./" class="mobile-nav-link">Home</a>
+  
+    <a href="./archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="./fancybox/jquery.fancybox.css">
+  <script src="./fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="./js/script.js"></script>
+
+  </div>
+</body>
+</html>
