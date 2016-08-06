@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Idea 通过 Maven 配置 Spring MVC+Hibernate | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="#####1.新建项目选择 Maven勾选上 Create from archetype选择 org.apache.maven.archetypes:maven-archetype-webapp
+
+next
+填写 GroupId 和 ArifactId123GroupID是项目组织唯一的标识符，实际对应JAVA的包的结构，是main目录里java的目录结构。ArtifactID就是项目的唯一的标识">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Idea 通过 Maven 配置 Spring MVC+Hibernate">
+<meta property="og:url" content="http://yoursite.com/2016/04/24/Idea 通过 Maven 配置 Spring MVC+Hibernate/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="#####1.新建项目选择 Maven勾选上 Create from archetype选择 org.apache.maven.archetypes:maven-archetype-webapp
+
+next
+填写 GroupId 和 ArifactId123GroupID是项目组织唯一的标识符，实际对应JAVA的包的结构，是main目录里java的目录结构。ArtifactID就是项目的唯一的标识">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/04/-----2016-04-24-15-49-09.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/04/-----2016-04-24-16-00-31.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/05/-----2016-05-01-23-42-09.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/04/-----2016-04-24-15-49-09.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/04/-----2016-04-24-16-00-31.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/05/-----2016-05-01-13-00-56.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/05/-----2016-05-01-13-02-11.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/05/-----2016-05-01-15-54-17.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/05/-----2016-05-01-21-59-02-1.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/05/-----2016-05-01-22-00-57.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/05/-----2016-05-01-22-15-36.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/05/-----2016-05-01-15-59-21.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/05/-----2016-05-01-16-00-34.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/05/-----2016-05-01-16-01-25.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/05/-----2016-05-01-16-03-03.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/05/-----2016-05-01-16-02-53.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/05/-----2016-05-01-22-18-11.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/05/-----2016-05-01-16-12-20.png">
+<meta property="og:image" content="http://yoursite.com/content/images/2016/05/-----2016-05-01-23-42-09.png">
+<meta property="og:updated_time" content="2016-08-06T15:03:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Idea 通过 Maven 配置 Spring MVC+Hibernate">
+<meta name="twitter:description" content="#####1.新建项目选择 Maven勾选上 Create from archetype选择 org.apache.maven.archetypes:maven-archetype-webapp
+
+next
+填写 GroupId 和 ArifactId123GroupID是项目组织唯一的标识符，实际对应JAVA的包的结构，是main目录里java的目录结构。ArtifactID就是项目的唯一的标识">
+<meta name="twitter:image" content="http://yoursite.com/content/images/2016/04/-----2016-04-24-15-49-09.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="./css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="./" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="./">Home</a>
+        
+          <a class="main-nav-link" href="./archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Søk"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Idea 通过 Maven 配置 Spring MVC+Hibernate" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="./2016/04/24/Idea 通过 Maven 配置 Spring MVC+Hibernate/" class="article-date">
+  <time datetime="2016-04-24T07:46:26.000Z" itemprop="datePublished">2016-04-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Idea 通过 Maven 配置 Spring MVC+Hibernate
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#####1.新建项目<br>选择 Maven<br><br>勾选上 Create from archetype<br><br>选择 org.apache.maven.archetypes:maven-archetype-webapp<br></p>
+<p><img src="content/images/2016/04/-----2016-04-24-15-49-09.png" alt=""></p>
+<p>next<br></p>
+<p>填写 GroupId 和 ArifactId<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">GroupID是项目组织唯一的标识符，实际对应JAVA的包的结构，是main目录里java的目录结构。</div><div class="line">ArtifactID就是项目的唯一的标识符，实际对应项目的名称，就是项目根目录的名称。</div><div class="line">一般GroupID就是填com.leafive.test这样子</div></pre></td></tr></table></figure></p>
+<p><img src="content/images/2016/04/-----2016-04-24-16-00-31.png" alt=""></p>
+<p>接下来就是傻瓜式的下一步.<br><br>进入编辑器后等待编辑器自动构建完成项目后打开==pom.xml==文件.将其修改为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line">    &lt;properties&gt;</div><div class="line">        &lt;spring.version&gt;4.2.5.RELEASE&lt;/spring.version&gt;</div><div class="line">        &lt;spring-data.version&gt;1.10.1.RELEASE&lt;/spring-data.version&gt;</div><div class="line">    &lt;/properties&gt;</div><div class="line">    &lt;dependencies&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;junit&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;junit&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;3.8.1&lt;/version&gt;</div><div class="line">            &lt;scope&gt;test&lt;/scope&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-core&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-web&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;javax.servlet&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;servlet-api&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;2.5&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;javax.servlet.jsp&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;jsp-api&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;2.1&lt;/version&gt;</div><div class="line">            &lt;scope&gt;provided&lt;/scope&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-test&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">            &lt;scope&gt;test&lt;/scope&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;jstl&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;jstl&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;1.2&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework.data&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-data-jpa&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring-data.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.hibernate.javax.persistence&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;hibernate-jpa-2.0-api&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;1.0.0.Final&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.hibernate&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;hibernate-entitymanager&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;3.6.10.Final&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;mysql&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;5.1.34&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.json&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;json&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;20080701&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.apache.struts&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;struts2-core&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;2.3.28.1&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">    &lt;/dependencies&gt;</div><div class="line">```</div><div class="line">等待编译器自动完成下载和导入后修改 ==web.xml== 文件</div></pre></td></tr></table></figure></p>
+<p><web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1"><br>  <display-name>Archetype Created Web Application</display-name><br>    <servlet><br>        <servlet-name>mvc-dispatcher</servlet-name><br>        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class><br>        <load-on-startup>1</load-on-startup><br>    </servlet></web-app></p>
+<pre><code>&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;mvc-dispatcher&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+&lt;filter&gt;
+    &lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;encoding&lt;/param-name&gt;
+        &lt;param-value&gt;UTF-8&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;forceEncoding&lt;/param-name&gt;
+        &lt;param-value&gt;true&lt;/param-value&gt;
+    &lt;/init-param&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+</code></pre><p><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">完成后进入项目设计菜单新建一个文件夹</div><div class="line">![](content/images/2016/05/-----2016-05-01-13-00-56.png)</div><div class="line">之后再将其设置为 Sources 文件夹</div><div class="line">![](content/images/2016/05/-----2016-05-01-13-02-11.png)</div><div class="line">在 java 文件夹中下创建如下四个包</div><div class="line">![](content/images/2016/05/-----2016-05-01-15-54-17.png)</div><div class="line">然后在 WEB-INF 目录下创建 mvc-dispatcher-servlet.xml 文件</div><div class="line">内容如下</div><div class="line">`</div></pre></td></tr></table></figure></p>
+<p>&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;</p>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xsi:schemalocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+<pre><code>&lt;!--指明 controller 所在包，并扫描其中的注解--&gt;
+&lt;context:component-scan base-package=&quot;com.spring.controller&quot;/&gt;
+
+&lt;!-- 静态资源(js、image等)的访问 --&gt;
+&lt;mvc:default-servlet-handler/&gt;
+
+&lt;!-- 开启注解 --&gt;
+&lt;mvc:annotation-driven/&gt;
+
+&lt;!--ViewResolver 视图解析器--&gt;
+&lt;!--用于支持Servlet、JSP视图解析--&gt;
+&lt;bean id=&quot;jspViewResolver&quot; class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+    &lt;property name=&quot;viewClass&quot; value=&quot;org.springframework.web.servlet.view.JstlView&quot;/&gt;
+    &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/pages/&quot;/&gt;
+    &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;
+&lt;/bean&gt;
+</code></pre><p></p></beans><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">在 Controller 包中创建 MainController.java 文件</div><div class="line">内容如下</div><div class="line">`</div></pre></td></tr></table></figure><p></p>
+<p>@Controller<br>public class MainController {</p>
+<pre><code>@RequestMapping(value = &quot;/&quot;, method = RequestMethod.GET)
+public String index() {
+    return &quot;index&quot;;
+}
+</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">然后在 WEB-INF 目录下创建 pages 目录.在该目录中创建 index.jsp 文件</div><div class="line">内容如下</div><div class="line">`</div></pre></td></tr></table></figure></p>
+<p>&lt;%@ page contentType=”text/html;charset=UTF-8” language=”java” %&gt;<br>&lt;!DOCTYPE html&gt;</p>
+<p><html lang="zh-CN"></html></p>
+<p><head><br>    <meta charset="utf-8"><br>    <meta http-equiv="X-UA-Compatible" content="IE=edge"><br>    <meta name="viewport" content="width=device-width, initial-scale=1"><br>    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ --><br>    <title>SpringMVC Demo 首页</title></head></p>
+<pre><code>&lt;!-- 新 Bootstrap 核心 CSS 文件 --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css&quot;&gt;
+
+&lt;!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries --&gt;
+&lt;!-- WARNING: Respond.js doesn&apos;&apos;t work if you view the page via file:// --&gt;
+&lt;!--[if lt IE 9]&gt;
+&lt;script src=&quot;//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;//cdn.bootcss.com/respond.js/1.4.2/respond.min.js&quot;&gt;&lt;/script&gt;
+&lt;![endif]--&gt;
+</code></pre><p></p>
+<p><body></body></p>
+<h1>这里是SpringMVC Demo首页</h1>
+
+<h3>出现此页面，说明配置成功。</h3>
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">这时候 SpringMVC 的配置已经基本完成了.直接运行项目就可以看到</div><div class="line">![](content/images/2016/05/-----2016-05-01-21-59-02-1.png)</div><div class="line">然后先把 Spring 放一边.来配置一下Hibernate.&lt;br&gt;</div><div class="line">首先右键项目选择 Add Framework Support</div><div class="line">![](content/images/2016/05/-----2016-05-01-22-00-57.png)</div><div class="line">然后勾选上 JavaEE Persistence 后选择 Hibernate 点击 OK</div><div class="line">![](content/images/2016/05/-----2016-05-01-22-15-36.png)</div><div class="line">这时候已经导入了 Hibernate 的 jar 包.然后点击编辑器的左下角的 Persistence在 SpringMVC 上右键.选择By DataBase Schema</div><div class="line">![](content/images/2016/05/-----2016-05-01-15-59-21.png)</div><div class="line">点击 Choose Data Source 旁的... 之后点击+号选择 MySql </div><div class="line">![](content/images/2016/05/-----2016-05-01-16-00-34.png)</div><div class="line">填写完成后点击 OK</div><div class="line">![](content/images/2016/05/-----2016-05-01-16-01-25.png)</div><div class="line">PS:数据库的创建我不介绍.直接上数据库的结构图.</div><div class="line">user 表</div><div class="line">![](content/images/2016/05/-----2016-05-01-16-03-03.png)</div><div class="line">blog 表</div><div class="line">![](content/images/2016/05/-----2016-05-01-16-02-53.png)</div><div class="line">之后返回到上一级页面.然后选择包.点击刷新.选上表及内容后点击 OK</div><div class="line">![](content/images/2016/05/-----2016-05-01-22-18-11.png)</div><div class="line">修改一下 persistence.xml 文件</div><div class="line">如下</div><div class="line">`</div></pre></td></tr></table></figure>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="defaultPersistenceUnit" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <properties>
+            <!-- 使用MySQL方言 -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect">
+            <!-- 数据库连接的URL地址 -->
+            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/springdemo">
+            <!-- 数据库连接的驱动 -->
+            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver">
+            <!-- 数据库连接的用户名 -->
+            <property name="hibernate.connection.username" value="root">
+            <!-- 数据库连接的密码 -->
+            <property name="hibernate.connection.password" value="Lu935226769">
+            <!-- 显示SQL语句 -->
+            <property name="hibernate.show_sql" value="true">
+
+            <property name="hibernate.connection.useUnicode" value="true">
+            <property name="hibernate.connection.characterEncoding" value="UTF-8">
+
+            <!-- 在显示SQL语句时格式化语句 -->
+            <property name="hibernate.format_sql" value="true">
+            <property name="hibernate.use_sql_comments" value="false">
+            <!-- 自动输出schema创建DDL语句 -->
+            <property name="hibernate.hbm2ddl.auto" value="update">
+
+            <!-- 数据库连接超时后自动重连 -->
+            <property name="hibernate.connection.autoReconnect" value="true">
+            <property name="connection.autoReconnectForPools" value="true">
+            <property name="connection.is-connection-validation-required" value="true">
+        </property></property></property></property></property></property></property></property></property></property></property></property></property></property></properties>
+    </persistence-unit>
+</persistence>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">这时候就已经完成了通过 Hibernate 导入数据库的操作&lt;br&gt;</div><div class="line">但需要为 model 创建 repository &lt;br&gt;</div><div class="line">内容如下</div><div class="line">![](content/images/2016/05/-----2016-05-01-16-12-20.png)</div><div class="line">然后需要修改 mvc-dispatcher-servlet.xml 文件.加入以下内容...</div><div class="line">`</div></pre></td></tr></table></figure>
+
+       <!-- 表示JPA Repository所在的包 -->
+       <jpa:repositories base-package="com.springmvc.repository">
+
+       <!-- 链接到persistence.xml -->
+       <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+              <property name="persistenceUnitName" value="defaultPersistenceUnit">
+       </property></bean>
+
+       <!-- 事务管理 -->
+       <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+              <property name="entityManagerFactory" ref="entityManagerFactory">
+       </property></bean>
+
+       <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+              <property name="annotatedClasses">
+                     <list>
+                            <value>com.springmvc.model.Blog</value>
+                            <value>com.springmvc.model.User</value>
+                     </list>
+              </property>
+              <property name="hibernateProperties">
+                     <props>
+                            <prop key="hibernate.connection.url">jdbc:mysql://localhost:3306/SpringDemo</prop>
+                            <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
+                     </props>
+              </property>
+       </bean>
+
+       <!-- 开启事务管理注解 -->
+       <tx:annotation-driven transaction-manager="transactionManager">
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">再在 MainController 文件中加入以下内容</div><div class="line">`</div></pre></td></tr></table></figure>
+
+    @Autowired
+    UserRepository userRepository;
+
+    @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
+    public String getUsers(ModelMap modelMap) {
+        List<user> list = userRepository.findAll();
+        modelMap.addAttribute("userList", list);
+        return "admin/users";
+    }
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">在 pages 下创建目录 admin 中创建 users.jsp 文件</div><div class="line">内容如下</div><div class="line">`</div></pre></td></tr></table></figure>
+
+<%@ page="" contenttype="text/html;charset=UTF-8" language="java" %="">
+<%@ taglib="" prefix="c" uri="http://java.sun.com/jsp/jstl/core" %="">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+  <title>SpringMVC 用户管理</title>
+
+  <!-- 新 Bootstrap 核心 CSS 文件 -->
+  <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn''t work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="container">
+  <h1>SpringMVC 博客系统-用户管理</h1>
+  <hr>
+
+  <h3>所有用户 <a href="/admin/users/add" type="button" class="btn btn-primary btn-sm">添加</a></h3>
+
+  <!-- 如果用户列表为空 -->
+  <c:if test="${empty userList}">
+    <div class="alert alert-warning" role="alert">
+      <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>User表为空，请<a href="/admin/users/add" type="button" class="btn btn-primary btn-sm">添加</a>
+    </div>
+  </c:if>
+
+  <!-- 如果用户列表非空 -->
+  <c:if test="${!empty userList}">
+    <table class="table table-bordered table-striped">
+      <tr>
+        <th>ID</th>
+        <th>昵称</th>
+        <th>姓名</th>
+        <th>密码</th>
+        <th>操作</th>
+      </tr>
+
+      <c:foreach items="${userList}" var="user">
+        <tr>
+          <td>${user.id}</td>
+          <td>${user.nickname}</td>
+          <td>${user.firstName} ${user.lastName}</td>
+          <td>${user.password}</td>
+          <td>
+            <a href="/admin/users/show/${user.id}" type="button" class="btn btn-sm btn-success">详情</a>
+            <a href="/admin/users/update/${user.id}" type="button" class="btn btn-sm btn-warning">修改</a>
+            <a href="/admin/users/delete/${user.id}" type="button" class="btn btn-sm btn-danger">删除</a>
+          </td>
+        </tr>
+      </c:foreach>
+    </table>
+  </c:if>
+</div>
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<p><script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script><br></p></body><br></html><br>```<br>这时候运行项目访问<a href="http://localhost:8080/admin/users" target="_blank" rel="external">http://localhost:8080/admin/users</a> 就可以看到<br><img src="content/images/2016/05/-----2016-05-01-23-42-09.png" alt=""><br>‘,’<h5 id="1">1.新建项目</h5><p></p>
+<p>选择 Maven<br><br>勾选上 Create from archetype<br><br>选择 org.apache.maven.archetypes:maven-archetype-webapp<br></p>
+
+<p><img src="content/images/2016/04/-----2016-04-24-15-49-09.png" alt=""></p>
+
+<p>next<br></p>
+
+<p>填写 GroupId 和 ArifactId</p>
+
+<pre><code>GroupID是项目组织唯一的标识符，实际对应JAVA的包的结构，是main目录里java的目录结构。  
+ArtifactID就是项目的唯一的标识符，实际对应项目的名称，就是项目根目录的名称。  
+一般GroupID就是填com.leafive.test这样子
+</code></pre>
+
+<p><img src="content/images/2016/04/-----2016-04-24-16-00-31.png" alt=""></p>
+
+<p>接下来就是傻瓜式的下一步.<br><br>进入编辑器后等待编辑器自动构建完成项目后打开<mark>pom.xml</mark>文件.将其修改为</p>
+
+<pre><code class="language-`">    &lt;properties&gt;
+        &lt;spring.version&gt;4.2.5.RELEASE&lt;/spring.version&gt;
+        &lt;spring-data.version&gt;1.10.1.RELEASE&lt;/spring-data.version&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;3.8.1&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-core&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+            &lt;artifactId&gt;servlet-api&lt;/artifactId&gt;
+            &lt;version&gt;2.5&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;javax.servlet.jsp&lt;/groupId&gt;
+            &lt;artifactId&gt;jsp-api&lt;/artifactId&gt;
+            &lt;version&gt;2.1&lt;/version&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-test&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;jstl&lt;/groupId&gt;
+            &lt;artifactId&gt;jstl&lt;/artifactId&gt;
+            &lt;version&gt;1.2&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.data&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-data-jpa&lt;/artifactId&gt;
+            &lt;version&gt;${spring-data.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.hibernate.javax.persistence&lt;/groupId&gt;
+            &lt;artifactId&gt;hibernate-jpa-2.0-api&lt;/artifactId&gt;
+            &lt;version&gt;1.0.0.Final&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+            &lt;artifactId&gt;hibernate-entitymanager&lt;/artifactId&gt;
+            &lt;version&gt;3.6.10.Final&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;mysql&lt;/groupId&gt;
+            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+            &lt;version&gt;5.1.34&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.json&lt;/groupId&gt;
+            &lt;artifactId&gt;json&lt;/artifactId&gt;
+            &lt;version&gt;20080701&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.struts&lt;/groupId&gt;
+            &lt;artifactId&gt;struts2-core&lt;/artifactId&gt;
+            &lt;version&gt;2.3.28.1&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+</code></pre>
+
+<p>等待编译器自动完成下载和导入后修改 <mark>web.xml</mark> 文件</p>
+
+<pre><code class="language-`">&lt;web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"  
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1"&gt;
+  &lt;display-name&gt;Archetype Created Web Application&lt;/display-name&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;mvc-dispatcher&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;mvc-dispatcher&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+    &lt;filter&gt;
+        &lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;
+        &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;encoding&lt;/param-name&gt;
+            &lt;param-value&gt;UTF-8&lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;forceEncoding&lt;/param-name&gt;
+            &lt;param-value&gt;true&lt;/param-value&gt;
+        &lt;/init-param&gt;
+    &lt;/filter&gt;
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;/filter-mapping&gt;
+&lt;/web-app&gt;  
+</code></pre>
+
+<p>完成后进入项目设计菜单新建一个文件夹<br><img src="content/images/2016/05/-----2016-05-01-13-00-56.png" alt=""><br>之后再将其设置为 Sources 文件夹<br><img src="content/images/2016/05/-----2016-05-01-13-02-11.png" alt=""><br>在 java 文件夹中下创建如下四个包<br><img src="content/images/2016/05/-----2016-05-01-15-54-17.png" alt=""><br>然后在 WEB-INF 目录下创建 mvc-dispatcher-servlet.xml 文件<br>内容如下</p>
+
+<pre><code class="language-`">&lt;?xml version="1.0" encoding="UTF-8"?&gt;  
+&lt;beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd"&gt;
+
+    &lt;!--指明 controller 所在包，并扫描其中的注解--&gt;
+    &lt;context:component-scan base-package="com.spring.controller"/&gt;
+
+    &lt;!-- 静态资源(js、image等)的访问 --&gt;
+    &lt;mvc:default-servlet-handler/&gt;
+
+    &lt;!-- 开启注解 --&gt;
+    &lt;mvc:annotation-driven/&gt;
+
+    &lt;!--ViewResolver 视图解析器--&gt;
+    &lt;!--用于支持Servlet、JSP视图解析--&gt;
+    &lt;bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"&gt;
+        &lt;property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/&gt;
+        &lt;property name="prefix" value="/WEB-INF/pages/"/&gt;
+        &lt;property name="suffix" value=".jsp"/&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;  
+</code></pre>
+
+<p>在 Controller 包中创建 MainController.java 文件<br>内容如下</p>
+
+<pre><code class="language-`">@Controller
+public class MainController {
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String index() {
+        return "index";
+    }
+}
+</code></pre>
+
+<p>然后在 WEB-INF 目录下创建 pages 目录.在该目录中创建 index.jsp 文件<br>内容如下</p>
+
+<pre><code class="language-`">&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;  
+&lt;!DOCTYPE html&gt;  
+&lt;html lang="zh-CN"&gt;  
+&lt;head&gt;  
+    &lt;meta charset="utf-8"&gt;
+    &lt;meta http-equiv="X-UA-Compatible" content="IE=edge"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+    &lt;!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ --&gt;
+    &lt;title&gt;SpringMVC Demo 首页&lt;/title&gt;
+
+    &lt;!-- 新 Bootstrap 核心 CSS 文件 --&gt;
+    &lt;link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"&gt;
+
+    &lt;!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries --&gt;
+    &lt;!-- WARNING: Respond.js doesn''t work if you view the page via file:// --&gt;
+    &lt;!--[if lt IE 9]&gt;
+    &lt;script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"&gt;&lt;/script&gt;
+    &lt;script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"&gt;&lt;/script&gt;
+    &lt;![endif]--&gt;
+&lt;/head&gt;  
+&lt;body&gt;  
+&lt;h1&gt;这里是SpringMVC Demo首页&lt;/h1&gt;
+
+&lt;h3&gt;出现此页面，说明配置成功。&lt;/h3&gt;
+
+&lt;!-- jQuery文件。务必在bootstrap.min.js 之前引入 --&gt;  
+&lt;script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- 最新的 Bootstrap 核心 JavaScript 文件 --&gt;  
+&lt;script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"&gt;&lt;/script&gt;  
+&lt;/body&gt;  
+&lt;/html&gt;  
+</code></pre>
+
+<p>这时候 SpringMVC 的配置已经基本完成了.直接运行项目就可以看到<br><img src="content/images/2016/05/-----2016-05-01-21-59-02-1.png" alt=""><br>然后先把 Spring 放一边.来配置一下Hibernate.<br><br>首先右键项目选择 Add Framework Support<br><img src="content/images/2016/05/-----2016-05-01-22-00-57.png" alt=""><br>然后勾选上 JavaEE Persistence 后选择 Hibernate 点击 OK<br><img src="content/images/2016/05/-----2016-05-01-22-15-36.png" alt=""><br>这时候已经导入了 Hibernate 的 jar 包.然后点击编辑器的左下角的 Persistence在 SpringMVC 上右键.选择By DataBase Schema<br><img src="content/images/2016/05/-----2016-05-01-15-59-21.png" alt=""><br>点击 Choose Data Source 旁的… 之后点击+号选择 MySql<br><img src="content/images/2016/05/-----2016-05-01-16-00-34.png" alt=""><br>填写完成后点击 OK<br><img src="content/images/2016/05/-----2016-05-01-16-01-25.png" alt=""><br>PS:数据库的创建我不介绍.直接上数据库的结构图. <br><br>user 表 <br><br><img src="content/images/2016/05/-----2016-05-01-16-03-03.png" alt=""><br>blog 表 <br><br><img src="content/images/2016/05/-----2016-05-01-16-02-53.png" alt=""><br>之后返回到上一级页面.然后选择包.点击刷新.选上表及内容后点击 OK<br><img src="content/images/2016/05/-----2016-05-01-22-18-11.png" alt=""><br>修改一下 persistence.xml 文件<br>如下</p>
+
+<pre><code class="language-`">&lt;?xml version="1.0" encoding="UTF-8"?&gt;  
+&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0"&gt;
+
+    &lt;persistence-unit name="defaultPersistenceUnit"  transaction-type="RESOURCE_LOCAL"&gt;
+        &lt;provider&gt;org.hibernate.ejb.HibernatePersistence&lt;/provider&gt;
+        &lt;properties&gt;
+            &lt;!-- 使用MySQL方言 --&gt;
+            &lt;property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/&gt;
+            &lt;!-- 数据库连接的URL地址 --&gt;
+            &lt;property name="hibernate.connection.url"
+                      value="jdbc:mysql://localhost:3306/springdemo"/&gt;
+            &lt;!-- 数据库连接的驱动 --&gt;
+            &lt;property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/&gt;
+            &lt;!-- 数据库连接的用户名 --&gt;
+            &lt;property name="hibernate.connection.username" value="root"/&gt;
+            &lt;!-- 数据库连接的密码 --&gt;
+            &lt;property name="hibernate.connection.password" value="Lu935226769"/&gt;
+            &lt;!-- 显示SQL语句 --&gt;
+            &lt;property name="hibernate.show_sql" value="true"/&gt;
+
+            &lt;property name="hibernate.connection.useUnicode" value="true"/&gt;
+            &lt;property name="hibernate.connection.characterEncoding" value="UTF-8"/&gt;
+
+            &lt;!-- 在显示SQL语句时格式化语句 --&gt;
+            &lt;property name="hibernate.format_sql" value="true"/&gt;
+            &lt;property name="hibernate.use_sql_comments" value="false"/&gt;
+            &lt;!-- 自动输出schema创建DDL语句 --&gt;
+            &lt;property name="hibernate.hbm2ddl.auto" value="update"/&gt;
+
+            &lt;!-- 数据库连接超时后自动重连 --&gt;
+            &lt;property name="hibernate.connection.autoReconnect" value="true"/&gt;
+            &lt;property name="connection.autoReconnectForPools" value="true"/&gt;
+            &lt;property name="connection.is-connection-validation-required" value="true"/&gt;
+        &lt;/properties&gt;
+    &lt;/persistence-unit&gt;
+&lt;/persistence&gt;  
+</code></pre>
+
+<p>这时候就已经完成了通过 Hibernate 导入数据库的操作<br><br>但需要为 model 创建 repository <br><br>内容如下<br><img src="content/images/2016/05/-----2016-05-01-16-12-20.png" alt=""><br>然后需要修改 mvc-dispatcher-servlet.xml 文件.加入以下内容…</p>
+
+<pre><code class="language-`">       &lt;!-- 表示JPA Repository所在的包 --&gt;
+       &lt;jpa:repositories base-package="com.springmvc.repository"/&gt;
+
+       &lt;!-- 链接到persistence.xml --&gt;
+       &lt;bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean"&gt;
+              &lt;property name="persistenceUnitName" value="defaultPersistenceUnit"/&gt;
+       &lt;/bean&gt;
+
+       &lt;!-- 事务管理 --&gt;
+       &lt;bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"&gt;
+              &lt;property name="entityManagerFactory" ref="entityManagerFactory"/&gt;
+       &lt;/bean&gt;
+
+       &lt;bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"&gt;
+              &lt;property name="annotatedClasses"&gt;
+                     &lt;list&gt;
+                            &lt;value&gt;com.springmvc.model.Blog&lt;/value&gt;
+                            &lt;value&gt;com.springmvc.model.User&lt;/value&gt;
+                     &lt;/list&gt;
+              &lt;/property&gt;
+              &lt;property name="hibernateProperties"&gt;
+                     &lt;props&gt;
+                            &lt;prop key="hibernate.connection.url"&gt;jdbc:mysql://localhost:3306/SpringDemo&lt;/prop&gt;
+                            &lt;prop key="hibernate.connection.driver_class"&gt;com.mysql.jdbc.Driver&lt;/prop&gt;
+                     &lt;/props&gt;
+              &lt;/property&gt;
+       &lt;/bean&gt;
+
+       &lt;!-- 开启事务管理注解 --&gt;
+       &lt;tx:annotation-driven transaction-manager="transactionManager"/&gt;
+</code></pre>
+
+<p>再在 MainController 文件中加入以下内容</p>
+
+<pre><code class="language-`">    @Autowired
+    UserRepository userRepository;
+
+    @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
+    public String getUsers(ModelMap modelMap) {
+        List&lt;User&gt; list = userRepository.findAll();
+        modelMap.addAttribute("userList", list);
+        return "admin/users";
+    }
+</code></pre>
+
+<p>在 pages 下创建目录 admin 中创建 users.jsp 文件<br>内容如下</p>
+
+<pre><code class="language-`">&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;  
+&lt;%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %&gt;  
+&lt;!DOCTYPE html&gt;  
+&lt;html lang="zh-CN"&gt;  
+&lt;head&gt;  
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta http-equiv="X-UA-Compatible" content="IE=edge"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ --&gt;
+  &lt;title&gt;SpringMVC 用户管理&lt;/title&gt;
+
+  &lt;!-- 新 Bootstrap 核心 CSS 文件 --&gt;
+  &lt;link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"&gt;
+
+  &lt;!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries --&gt;
+  &lt;!-- WARNING: Respond.js doesn''t work if you view the page via file:// --&gt;
+  &lt;!--[if lt IE 9]&gt;
+  &lt;script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"&gt;&lt;/script&gt;
+  &lt;script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"&gt;&lt;/script&gt;
+  &lt;![endif]--&gt;
+&lt;/head&gt;  
+&lt;body&gt;  
+&lt;div class="container"&gt;  
+  &lt;h1&gt;SpringMVC 博客系统-用户管理&lt;/h1&gt;
+  &lt;hr/&gt;
+
+  &lt;h3&gt;所有用户 &lt;a href="/admin/users/add" type="button" class="btn btn-primary btn-sm"&gt;添加&lt;/a&gt;&lt;/h3&gt;
+
+  &lt;!-- 如果用户列表为空 --&gt;
+  &lt;c:if test="${empty userList}"&gt;
+    &lt;div class="alert alert-warning" role="alert"&gt;
+      &lt;span class="glyphicon glyphicon-info-sign" aria-hidden="true"&gt;&lt;/span&gt;User表为空，请&lt;a href="/admin/users/add" type="button" class="btn btn-primary btn-sm"&gt;添加&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/c:if&gt;
+
+  &lt;!-- 如果用户列表非空 --&gt;
+  &lt;c:if test="${!empty userList}"&gt;
+    &lt;table class="table table-bordered table-striped"&gt;
+      &lt;tr&gt;
+        &lt;th&gt;ID&lt;/th&gt;
+        &lt;th&gt;昵称&lt;/th&gt;
+        &lt;th&gt;姓名&lt;/th&gt;
+        &lt;th&gt;密码&lt;/th&gt;
+        &lt;th&gt;操作&lt;/th&gt;
+      &lt;/tr&gt;
+
+      &lt;c:forEach items="${userList}" var="user"&gt;
+        &lt;tr&gt;
+          &lt;td&gt;${user.id}&lt;/td&gt;
+          &lt;td&gt;${user.nickname}&lt;/td&gt;
+          &lt;td&gt;${user.firstName} ${user.lastName}&lt;/td&gt;
+          &lt;td&gt;${user.password}&lt;/td&gt;
+          &lt;td&gt;
+            &lt;a href="/admin/users/show/${user.id}" type="button" class="btn btn-sm btn-success"&gt;详情&lt;/a&gt;
+            &lt;a href="/admin/users/update/${user.id}" type="button" class="btn btn-sm btn-warning"&gt;修改&lt;/a&gt;
+            &lt;a href="/admin/users/delete/${user.id}" type="button" class="btn btn-sm btn-danger"&gt;删除&lt;/a&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/c:forEach&gt;
+    &lt;/table&gt;
+  &lt;/c:if&gt;
+&lt;/div&gt;
+
+&lt;!-- jQuery文件。务必在bootstrap.min.js 之前引入 --&gt;  
+&lt;script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- 最新的 Bootstrap 核心 JavaScript 文件 --&gt;  
+&lt;script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"&gt;&lt;/script&gt;  
+&lt;/body&gt;  
+&lt;/html&gt;  
+</code></pre>
+
+<p>这时候运行项目访问<a href="http://localhost:8080/admin/users" target="_blank" rel="external">http://localhost:8080/admin/users</a> 就可以看到<br><img src="content/images/2016/05/-----2016-05-01-23-42-09.png" alt=""></p></%@></%@></user></tx:annotation-driven></jpa:repositories>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com./2016/04/24/Idea 通过 Maven 配置 Spring MVC+Hibernate/" data-id="cirjbk9h6000a0veonzgyapsw" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Spring/">Spring</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="./2016/05/02/DrawerLayout（侧滑菜单）/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Idea 通过 Maven 配置 Spring MVC+Hibernate
+        
+      </div>
+    </a>
+  
+  
+    <a href="./2016/01/23/ListView ScrollView 不得不说的一些事/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">ListView ScrollView 不得不说的一些事</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="./tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/ImageIO/">ImageIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/JavaWeb/">JavaWeb</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/PopupWindow/">PopupWindow</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/Spring/">Spring</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/TabLayout/">TabLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/反射/">反射</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/扯淡/">扯淡</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/树莓派/">树莓派</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/黑苹果/">黑苹果</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="./tags/Android/" style="font-size: 20px;">Android</a> <a href="./tags/ImageIO/" style="font-size: 10px;">ImageIO</a> <a href="./tags/Java/" style="font-size: 16.67px;">Java</a> <a href="./tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="./tags/PopupWindow/" style="font-size: 10px;">PopupWindow</a> <a href="./tags/Spring/" style="font-size: 13.33px;">Spring</a> <a href="./tags/TabLayout/" style="font-size: 10px;">TabLayout</a> <a href="./tags/反射/" style="font-size: 10px;">反射</a> <a href="./tags/扯淡/" style="font-size: 10px;">扯淡</a> <a href="./tags/树莓派/" style="font-size: 10px;">树莓派</a> <a href="./tags/黑苹果/" style="font-size: 10px;">黑苹果</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Arkiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="./archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/12/">December 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/08/">August 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/07/">July 2015</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Siste innlegg</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="./2016/08/04/Android动态加载/">Android动态加载</a>
+          </li>
+        
+          <li>
+            <a href="./2016/08/04/转-详解Java中使用ImageIO类对图片进行压缩的方法/">转-详解Java中使用ImageIO类对图片进行压缩的方法</a>
+          </li>
+        
+          <li>
+            <a href="./2016/07/29/利用树莓派制作一个实时监控的遥控小车/">利用树莓派制作一个实时监控的遥控小车</a>
+          </li>
+        
+          <li>
+            <a href="./2016/05/02/TabLayout（切换卡）/">TabLayout（切换卡）</a>
+          </li>
+        
+          <li>
+            <a href="./2016/05/02/DrawerLayout（侧滑菜单）/">Idea 通过 Maven 配置 Spring MVC+Hibernate</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="./" class="mobile-nav-link">Home</a>
+  
+    <a href="./archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="./fancybox/jquery.fancybox.css">
+  <script src="./fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="./js/script.js"></script>
+
+  </div>
+</body>
+</html>

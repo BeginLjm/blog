@@ -50,7 +50,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Søk"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
@@ -60,6 +60,1147 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-Android动态加载" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="./2016/08/04/Android动态加载/" class="article-date">
+  <time datetime="2016-08-04T12:59:00.000Z" itemprop="datePublished">2016-08-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="./2016/08/04/Android动态加载/">Android动态加载</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近因为接口问题搞得有点头大.感觉每次因为接口变动而更新 APP 是会被用户骂死的.所以想起了 JAVA 的反射机制.也就来了一波动态加载.</p>
+<p>百度百科解释的 JAVA 反射</p>
+<blockquote>
+<p>JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。</p>
+</blockquote>
+<p>然后是动态加载</p>
+<blockquote>
+<p>在程序运行的时候，加载一些程序自身原本不存在的可执行文件并运行这些文件里的代码逻辑。</p>
+</blockquote>
+<p>这两者之间的关系就是使用反射机制达到动态加载的效果.很简单的.</p>
+<p>因为我这里要处理的问题有两个.一个是接口地址的变动.一个是接口返回数据格式的变动.</p>
+<p>第一个问题很好解决.服务器上保存一个文本文档.内容包含接口地址的变量名和值.本地检查文本文档的版本号.发现有更新就下载文本文档.这个我也就不多讲.主要是在更新接口文件后加载这个文件.查看文件内容.更具内容来修改接口地址的值.也就是需要通过反射机制来修改 JAVA 文件了.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">File file = <span class="keyword">new</span> File(<span class="string">"/data/data/com.mcdull.cert/files/url"</span>);<span class="comment">//加载文件</span></div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    BufferedReader bufferedReader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> FileReader(file));</div><div class="line">    StringBuffer sb = <span class="keyword">new</span> StringBuffer();</div><div class="line">    String s = <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">while</span> ((s = bufferedReader.readLine()) != <span class="keyword">null</span>) &#123;</div><div class="line">        String name = s;<span class="comment">//读取文件内容</span></div><div class="line">        String url = bufferedReader.readLine();<span class="comment">//读取文件内容</span></div><div class="line">        Class aClass = Class.forName(<span class="string">"com.mcdull.cert.utils.InternetUtil"</span>);<span class="comment">//反射获取包含接口地址信息的JAVA 文件</span></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            Field field = aClass.getField(name);<span class="comment">//获取变量</span></div><div class="line">            field.set(aClass, url);<span class="comment">//为变量赋值</span></div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">    e.printStackTrace();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个就是具体的实现代码.有一个地方要注意的就是再获取变量这个地方.编译器不会提示错误或者异常.是因为外部抛了一个更大的异常.但是这里不一定包含name 这个名字的变量.所以需要自己手抛一个异常进行处理…</p>
+<p>这个还是比较简单的反射.只是读取文件和设置变量.接下来是需要通过反射来实现动态加载json解析的函数.</p>
+<p>本来想讲下错误案例的…想想还是先讲下正确的做法.有空再在最后补充下有可能出现的错误…</p>
+<p>因为我这里讲的是 Android 动态加载.所以就打开你的 Android 工程吧.在你的项目那右键–&gt;new–&gt;Module–&gt;Android Library 然后输入一些信息就会自动创建完成了.<br><br>创建好之后应该是这样的.<br><img src="content/images/2016/08/-----2016-08-04-20-41-24.png" alt=""><br>然后先不管他.先在你自己的工程中创建一个abstract<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.mcdull.cert.json;</div><div class="line"></div><div class="line"><span class="keyword">import</span> android.content.Context;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="keyword">import</span> java.util.Map;</div><div class="line"></div><div class="line"><span class="keyword">import</span> dalvik.system.DexClassLoader;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by Begin on 16/8/4.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbsJsonUtil</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> List&lt;List&lt;String&gt;&gt; scoreParseJson(String s);</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> AbsJsonUtil <span class="title">getJsonUtil</span><span class="params">(Context context)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        DexClassLoader dexClassLoader = <span class="keyword">new</span> DexClassLoader(<span class="string">"/data/data/com.mcdull.cert/files/json.jar"</span>, context.getDir(<span class="string">"dex"</span>, Context.MODE_PRIVATE).getAbsolutePath(), <span class="keyword">null</span>, context.getClassLoader());</div><div class="line">        Class&lt;?&gt; myClass1 = dexClassLoader.loadClass(<span class="string">"com.lu.json.JsonUtil"</span>);<span class="comment">//通过反射加载 JsonUtil</span></div><div class="line">        <span class="keyword">return</span> (AbsJsonUtil) myClass1.newInstance();<span class="comment">//获取到实现后的 AbsJsonUtil</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个代码中主要是包含解析 json 的接口.也就是动态加载的内容中所需要实现的接口.和一个动态加载函数.我主要讲一下动态加载函数.</p>
+<p>这里是使用的 DexClassLoader 和 JAVA 中使用的 UrlClassLoader 不一样.原因我就不讲了.主要是 Android 和 JAVA 的运行机制不一样.这里 DexClassLoader 的四个参数分别是自己生成的 jar 包的路径，临时 dex 存放路径，所需要加载的本地 dex 路径和加载器.</p>
+<p>然后把它复制一份到刚刚创建的 Module 中的 java 文件夹下.注意包结构要和 Android 项目中的一致.然后再创建一个不同包结构的 JsonUtil 类继承 AbsJsonUtil注意是不同包结构.相同肯定会出问题.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.lu.json;</div><div class="line"></div><div class="line"><span class="keyword">import</span> com.mcdull.cert.json.AbsJsonUtil;</div><div class="line"><span class="keyword">import</span> org.json.JSONArray;</div><div class="line"><span class="keyword">import</span> org.json.JSONException;</div><div class="line"><span class="keyword">import</span> org.json.JSONObject;</div><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.LinkedList;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="keyword">import</span> java.util.Map;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Created by Begin on 16/8/4.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JsonUtil</span> <span class="keyword">extends</span> <span class="title">AbsJsonUtil</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> List&lt;List&lt;String&gt;&gt; scoreParseJson(String s) &#123;</div><div class="line">        List&lt;List&lt;String&gt;&gt; lists = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            JSONObject jsonObject = <span class="keyword">new</span> JSONObject(s);</div><div class="line">            JSONArray data = jsonObject.getJSONArray(<span class="string">"data"</span>);</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; data.length(); i++) &#123;</div><div class="line">                JSONObject object = (JSONObject) data.get(i);</div><div class="line">                List&lt;String&gt; list = <span class="keyword">new</span> LinkedList&lt;&gt;();</div><div class="line">                list.add(object.getString(<span class="string">"course"</span>));</div><div class="line">                list.add(object.getString(<span class="string">"score"</span>));</div><div class="line">                list.add(object.getString(<span class="string">"credit"</span>));</div><div class="line">                lists.add(list);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (JSONException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> lists;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个代码没什么看的.就是实现 json 解析.</p>
+<p>然后就是在需要调用的地方使用如下代码进行调用就行了.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lists =AbsJsonUtil.getJsonUtil(<span class="keyword">this</span>).scoreParseJson(scoreJson);</div></pre></td></tr></table></figure></p>
+<p>看上去好像没什么问题.但是还有一个步骤.很重要的步骤.那就是生成 jar 包.没生成 jar 包去给应用进行更新.哪来的动态加载…</p>
+<p>现在需要打开Module中的build.gradle来修改修改.<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">apply plugin: <span class="string">'com.android.library'</span></div><div class="line"></div><div class="line">android &#123;</div><div class="line">    compileSdkVersion <span class="number">24</span></div><div class="line">    buildToolsVersion <span class="string">"23.0.2"</span></div><div class="line"></div><div class="line">    defaultConfig &#123;</div><div class="line">        minSdkVersion <span class="number">16</span></div><div class="line">        targetSdkVersion <span class="number">24</span></div><div class="line">        versionCode <span class="number">1</span></div><div class="line">        versionName <span class="string">"1.0"</span></div><div class="line">    &#125;</div><div class="line">    buildTypes &#123;</div><div class="line">        release &#123;</div><div class="line">            minifyEnabled <span class="keyword">false</span></div><div class="line">            proguardFiles getDefaultProguardFile(<span class="string">'proguard-android.txt'</span>), <span class="string">'proguard-rules.pro'</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">dependencies</span> &#123;</div><div class="line">    <span class="keyword">compile</span> <span class="keyword">fileTree</span>(dir: <span class="string">'libs'</span>, <span class="keyword">include</span>: [<span class="string">'*.jar'</span>])</div><div class="line">    testCompile <span class="string">'junit:junit:4.12'</span></div><div class="line">    <span class="keyword">compile</span> <span class="string">'com.android.support:appcompat-v7:24.1.1'</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//dependsOn 可根据实际需要增加或更改</span></div><div class="line"><span class="keyword">task</span> buildJar(dependsOn: [<span class="string">'compileReleaseJavaWithJavac'</span>], type: Jar) &#123;</div><div class="line">    appendix = <span class="string">"demo"</span></div><div class="line">    baseName = <span class="string">"androidJar"</span></div><div class="line">    version = <span class="string">"1.0.0"</span></div><div class="line">    classifier = <span class="string">"release"</span></div><div class="line">    <span class="comment">//后缀名</span></div><div class="line">    extension = <span class="string">"jar"</span></div><div class="line">    <span class="comment">//最终的 Jar 包名，如果没设置，默认为 [baseName]-[appendix]-[version]-[classifier].[extension]</span></div><div class="line">    archiveName = <span class="string">"json.jar"</span></div><div class="line">    <span class="comment">//需打包的资源所在的路径集</span></div><div class="line">    <span class="keyword">def</span> srcClassDir = [<span class="keyword">project</span>.buildDir.absolutePath + <span class="string">"/intermediates/classes/release"</span>];</div><div class="line">    <span class="comment">//初始化资源路径集</span></div><div class="line">    <span class="keyword">from</span> srcClassDir</div><div class="line">    <span class="comment">//去除路径集下部分的资源</span></div><div class="line"><span class="comment">//    exclude "**/R.class"</span></div><div class="line"><span class="comment">//    exclude "**/R\$*.class"</span></div><div class="line">    <span class="comment">//只导入资源路径集下的部分资源</span></div><div class="line">    <span class="keyword">include</span> <span class="string">"com/lu/json/*.class"</span></div><div class="line">    <span class="comment">//注: exclude include 支持可变长参数</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后运行<code>./gradlew buildJar</code>就生成了 jar 包.但是这并没有什么用处.你使用这个 jar 包进行反射的时候会提示<code>doesn&#39;t contain classes.dex</code>所以还需要由sdk 自带的 dx 工具对 jar 进行再一次打包 <code>./dx --dex --output=打包后文件 被打包文件</code>这样就可以进行反射了…（dx工具在 build-tools 里面）</p>
+<p>再贴一下我 copy 的gradle 代码<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.android.build.gradle.AppPlugin</div><div class="line"><span class="keyword">import</span> com.android.build.gradle.LibraryPlugin</div><div class="line"><span class="keyword">import</span> proguard.gradle.ProGuardTask</div><div class="line">apply plugin: <span class="string">'com.android.application'</span></div><div class="line">android &#123;</div><div class="line">    compileSdkVersion <span class="number">23</span></div><div class="line">    buildToolsVersion <span class="string">"23.0.2"</span></div><div class="line">    defaultConfig &#123;</div><div class="line">        applicationId <span class="string">"org.chaos.demo.jar"</span></div><div class="line">        minSdkVersion <span class="number">19</span></div><div class="line">        targetSdkVersion <span class="number">22</span></div><div class="line">        versionCode <span class="number">1</span></div><div class="line">        versionName <span class="string">"1.0"</span></div><div class="line">    &#125;</div><div class="line">    buildTypes &#123;</div><div class="line">        release &#123;</div><div class="line">            minifyEnabled <span class="keyword">true</span></div><div class="line">            proguardFiles getDefaultProguardFile(<span class="string">'proguard-android.txt'</span>), <span class="string">'proguard-rules.pro'</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">dependencies</span> &#123;</div><div class="line">    <span class="keyword">compile</span> <span class="keyword">fileTree</span>(dir: <span class="string">'libs'</span>, <span class="keyword">include</span>: [<span class="string">'*.jar'</span>])</div><div class="line">&#125;</div><div class="line"><span class="comment">//dependsOn 可根据实际需要增加或更改</span></div><div class="line"><span class="keyword">task</span> buildJar(dependsOn: [<span class="string">'compileReleaseJavaWithJavac'</span>], type: Jar) &#123;</div><div class="line">    appendix = <span class="string">"demo"</span></div><div class="line">    baseName = <span class="string">"androidJar"</span></div><div class="line">    version = <span class="string">"1.0.0"</span></div><div class="line">    classifier = <span class="string">"release"</span></div><div class="line">    <span class="comment">//后缀名</span></div><div class="line">    extension = <span class="string">"jar"</span></div><div class="line">    <span class="comment">//最终的 Jar 包名，如果没设置，默认为 [baseName]-[appendix]-[version]-[classifier].[extension]</span></div><div class="line">    archiveName = <span class="string">"AndroidJarDemo.jar"</span></div><div class="line">    <span class="comment">//需打包的资源所在的路径集</span></div><div class="line">    <span class="keyword">def</span> srcClassDir = [<span class="keyword">project</span>.buildDir.absolutePath + <span class="string">"/intermediates/classes/release"</span>];</div><div class="line">    <span class="comment">//初始化资源路径集</span></div><div class="line">    <span class="keyword">from</span> srcClassDir</div><div class="line">    <span class="comment">//去除路径集下部分的资源</span></div><div class="line"><span class="comment">//    exclude "org/chaos/demo/jar/MainActivity.class"</span></div><div class="line"><span class="comment">//    exclude "org/chaos/demo/jar/MainActivity\$*.class"</span></div><div class="line"><span class="comment">//    exclude "org/chaos/demo/jar/BuildConfig.class"</span></div><div class="line"><span class="comment">//    exclude "org/chaos/demo/jar/BuildConfig\$*.class"</span></div><div class="line"><span class="comment">//    exclude "**/R.class"</span></div><div class="line"><span class="comment">//    exclude "**/R\$*.class"</span></div><div class="line">    <span class="comment">//只导入资源路径集下的部分资源</span></div><div class="line">    <span class="keyword">include</span> <span class="string">"org/chaos/demo/jar/**/*.class"</span></div><div class="line">    <span class="comment">//注: exclude include 支持可变长参数</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">task</span> proguardJar(dependsOn: [<span class="string">'buildJar'</span>], type: ProGuardTask) &#123;</div><div class="line">    <span class="comment">//Android 默认的 proguard 文件</span></div><div class="line">    configuration android.getDefaultProguardFile(<span class="string">'proguard-android.txt'</span>)</div><div class="line">    <span class="comment">//manifest 注册的组件对应的 proguard 文件</span></div><div class="line">    configuration <span class="keyword">project</span>.buildDir.absolutePath + <span class="string">"/intermediates/proguard-rules/release/aapt_rules.txt"</span></div><div class="line">    configuration <span class="string">'proguard-rules.pro'</span></div><div class="line">    String inJar = buildJar.archivePath.getAbsolutePath()</div><div class="line">    <span class="comment">//输入 jar</span></div><div class="line">    injars inJar</div><div class="line">    <span class="comment">//输出 jar</span></div><div class="line">    outjars inJar.substring(<span class="number">0</span>, inJar.lastIndexOf(<span class="string">'/'</span>)) + <span class="string">"/proguard-$&#123;buildJar.archiveName&#125;"</span></div><div class="line">    <span class="comment">//设置不删除未引用的资源(类，方法等)</span></div><div class="line">    dontshrink</div><div class="line">    Plugin plugin = getPlugins().hasPlugin(AppPlugin) ?</div><div class="line">            getPlugins().findPlugin(AppPlugin) :</div><div class="line">            getPlugins().findPlugin(LibraryPlugin)</div><div class="line">    <span class="keyword">if</span> (plugin != <span class="keyword">null</span>) &#123;</div><div class="line">        List&lt;String&gt; runtimeJarList</div><div class="line">        <span class="keyword">if</span> (plugin.getMetaClass().getMetaMethod(<span class="string">"getRuntimeJarList"</span>)) &#123;</div><div class="line">            runtimeJarList = plugin.getRuntimeJarList()</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (android.getMetaClass().getMetaMethod(<span class="string">"getBootClasspath"</span>)) &#123;</div><div class="line">            runtimeJarList = android.getBootClasspath()</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            runtimeJarList = plugin.getBootClasspath()</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">for</span> (String runtimeJar : runtimeJarList) &#123;</div><div class="line">            <span class="comment">//给 proguard 添加 runtime</span></div><div class="line">            libraryjars(runtimeJar)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>需要代码混淆使用<code>./gradlew proguardJar</code></p>
+</blockquote>
+<p>讲的有点乱…</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com./2016/08/04/Android动态加载/" data-id="cirjbk9gh00030veopjgn9zu7" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/反射/">反射</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-转-详解Java中使用ImageIO类对图片进行压缩的方法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="./2016/08/04/转-详解Java中使用ImageIO类对图片进行压缩的方法/" class="article-date">
+  <time datetime="2016-08-04T10:42:05.000Z" itemprop="datePublished">2016-08-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="./2016/08/04/转-详解Java中使用ImageIO类对图片进行压缩的方法/">转-详解Java中使用ImageIO类对图片进行压缩的方法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>可以压缩为任意大小，压缩后高清，不变形（留白），可以改后缀名，可以修改压缩分辨率。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> cn.com.images; </div><div class="line"> </div><div class="line"><span class="keyword">import</span> java.awt.Graphics; </div><div class="line"><span class="keyword">import</span> java.awt.Image; </div><div class="line"><span class="keyword">import</span> java.awt.image.BufferedImage; </div><div class="line"><span class="keyword">import</span> java.io.File; </div><div class="line"><span class="keyword">import</span> java.io.IOException; </div><div class="line"><span class="keyword">import</span> java.math.BigDecimal; </div><div class="line"><span class="keyword">import</span> java.math.MathContext; </div><div class="line"><span class="keyword">import</span> java.util.ArrayList; </div><div class="line"> </div><div class="line"><span class="keyword">import</span> javax.imageio.ImageIO; </div><div class="line"> </div><div class="line"><span class="comment">/*** </span></div><div class="line"> * 对图片进行操作 </div><div class="line"> * </div><div class="line"> * <span class="doctag">@author</span> chenzheng_java </div><div class="line"> * <span class="doctag">@since</span> 2011/7/29 </div><div class="line"> * </div><div class="line"> */ </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ImageHelper</span> </span>&#123; </div><div class="line"> </div><div class="line">  <span class="keyword">private</span> <span class="keyword">static</span> ImageHelper imageHelper = <span class="keyword">null</span>; </div><div class="line"> </div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ImageHelper <span class="title">getImageHelper</span><span class="params">()</span> </span>&#123; </div><div class="line">    <span class="keyword">if</span> (imageHelper == <span class="keyword">null</span>) &#123; </div><div class="line">      imageHelper = <span class="keyword">new</span> ImageHelper(); </div><div class="line">    &#125; </div><div class="line">    <span class="keyword">return</span> imageHelper; </div><div class="line">  &#125; </div><div class="line"> </div><div class="line">  <span class="comment">/*** </span></div><div class="line">   * 按指定的比例缩放图片 </div><div class="line">   * </div><div class="line">   * <span class="doctag">@param</span> sourceImagePath </div><div class="line">   *      源地址 </div><div class="line">   * <span class="doctag">@param</span> destinationPath </div><div class="line">   *      改变大小后图片的地址 </div><div class="line">   * <span class="doctag">@param</span> scale </div><div class="line">   *      缩放比例，如1.2 </div><div class="line">   */ </div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">scaleImage</span><span class="params">(String sourceImagePath, </span></span></div><div class="line">      String destinationPath, <span class="keyword">double</span> scale,String format) &#123; </div><div class="line"> </div><div class="line">    File file = <span class="keyword">new</span> File(sourceImagePath); </div><div class="line">    BufferedImage bufferedImage; </div><div class="line">    <span class="keyword">try</span> &#123; </div><div class="line">      bufferedImage = ImageIO.read(file); </div><div class="line">      <span class="keyword">int</span> width = bufferedImage.getWidth(); </div><div class="line">      <span class="keyword">int</span> height = bufferedImage.getHeight(); </div><div class="line"> </div><div class="line">      width = parseDoubleToInt(width * scale); </div><div class="line">      height = parseDoubleToInt(height * scale); </div><div class="line"> </div><div class="line">      Image image = bufferedImage.getScaledInstance(width, height, </div><div class="line">          Image.SCALE_SMOOTH); </div><div class="line">      BufferedImage outputImage = <span class="keyword">new</span> BufferedImage(width, height, </div><div class="line">          BufferedImage.TYPE_INT_RGB); </div><div class="line">      Graphics graphics = outputImage.getGraphics(); </div><div class="line">      graphics.drawImage(image, <span class="number">0</span>, <span class="number">0</span>, <span class="keyword">null</span>); </div><div class="line">      graphics.dispose(); </div><div class="line"> </div><div class="line">      ImageIO.write(outputImage, format, <span class="keyword">new</span> File(destinationPath)); </div><div class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123; </div><div class="line">      System.out.println(<span class="string">"scaleImage方法压缩图片时出错了"</span>); </div><div class="line">      e.printStackTrace(); </div><div class="line">    &#125; </div><div class="line"> </div><div class="line">  &#125; </div><div class="line"> </div><div class="line">  <span class="comment">/*** </span></div><div class="line">   * 将图片缩放到指定的高度或者宽度 </div><div class="line">   * <span class="doctag">@param</span> sourceImagePath 图片源地址 </div><div class="line">   * <span class="doctag">@param</span> destinationPath 压缩完图片的地址 </div><div class="line">   * <span class="doctag">@param</span> width 缩放后的宽度 </div><div class="line">   * <span class="doctag">@param</span> height 缩放后的高度 </div><div class="line">   * <span class="doctag">@param</span> auto 是否自动保持图片的原高宽比例 </div><div class="line">   * <span class="doctag">@param</span> format 图图片格式 例如 jpg </div><div class="line">   */ </div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">scaleImageWithParams</span><span class="params">(String sourceImagePath, </span></span></div><div class="line">      String destinationPath, <span class="keyword">int</span> width, <span class="keyword">int</span> height, <span class="keyword">boolean</span> auto,String format) &#123; </div><div class="line">     </div><div class="line">    <span class="keyword">try</span> &#123; </div><div class="line">    File file = <span class="keyword">new</span> File(sourceImagePath); </div><div class="line">    BufferedImage bufferedImage = <span class="keyword">null</span>; </div><div class="line">    bufferedImage = ImageIO.read(file); </div><div class="line">      <span class="keyword">if</span> (auto) &#123; </div><div class="line">        ArrayList&lt;Integer&gt; paramsArrayList = getAutoWidthAndHeight(bufferedImage,width,height); </div><div class="line">        width = paramsArrayList.get(<span class="number">0</span>); </div><div class="line">        height = paramsArrayList.get(<span class="number">1</span>); </div><div class="line">        System.out.println(<span class="string">"自动调整比例，width="</span>+width+<span class="string">" height="</span>+height); </div><div class="line">      &#125; </div><div class="line">     </div><div class="line">    Image image = bufferedImage.getScaledInstance(width, height, </div><div class="line">        Image.SCALE_DEFAULT); </div><div class="line">    BufferedImage outputImage = <span class="keyword">new</span> BufferedImage(width, height, </div><div class="line">        BufferedImage.TYPE_INT_RGB); </div><div class="line">    Graphics graphics = outputImage.getGraphics(); </div><div class="line">    graphics.drawImage(image, <span class="number">0</span>, <span class="number">0</span>, <span class="keyword">null</span>); </div><div class="line">    graphics.dispose(); </div><div class="line">    ImageIO.write(outputImage, format, <span class="keyword">new</span> File(destinationPath)); </div><div class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123; </div><div class="line">      System.out.println(<span class="string">"scaleImageWithParams方法压缩图片时出错了"</span>); </div><div class="line">      e.printStackTrace(); </div><div class="line">    &#125; </div><div class="line">     </div><div class="line">     </div><div class="line">  &#125; </div><div class="line"> </div><div class="line">  <span class="comment">/** </span></div><div class="line">   * 将double类型的数据转换为int，四舍五入原则 </div><div class="line">   * </div><div class="line">   * <span class="doctag">@param</span> sourceDouble </div><div class="line">   * <span class="doctag">@return</span> </div><div class="line">   */ </div><div class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">parseDoubleToInt</span><span class="params">(<span class="keyword">double</span> sourceDouble)</span> </span>&#123; </div><div class="line">    <span class="keyword">int</span> result = <span class="number">0</span>; </div><div class="line">    result = (<span class="keyword">int</span>) sourceDouble; </div><div class="line">    <span class="keyword">return</span> result; </div><div class="line">  &#125; </div><div class="line">   </div><div class="line">  <span class="comment">/*** </span></div><div class="line">   * </div><div class="line">   * <span class="doctag">@param</span> bufferedImage 要缩放的图片对象 </div><div class="line">   * <span class="doctag">@param</span> width_scale 要缩放到的宽度 </div><div class="line">   * <span class="doctag">@param</span> height_scale 要缩放到的高度 </div><div class="line">   * <span class="doctag">@return</span> 一个集合，第一个元素为宽度，第二个元素为高度 </div><div class="line">   */ </div><div class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> ArrayList&lt;Integer&gt; <span class="title">getAutoWidthAndHeight</span><span class="params">(BufferedImage bufferedImage,<span class="keyword">int</span> width_scale,<span class="keyword">int</span> height_scale)</span></span>&#123; </div><div class="line">    ArrayList&lt;Integer&gt; arrayList = <span class="keyword">new</span> ArrayList&lt;Integer&gt;(); </div><div class="line">    <span class="keyword">int</span> width = bufferedImage.getWidth(); </div><div class="line">    <span class="keyword">int</span> height = bufferedImage.getHeight(); </div><div class="line">    <span class="keyword">double</span> scale_w =getDot2Decimal( width_scale,width); </div><div class="line">     </div><div class="line">    System.out.println(<span class="string">"getAutoWidthAndHeight width="</span>+width + <span class="string">"scale_w="</span>+scale_w); </div><div class="line">    <span class="keyword">double</span> scale_h = getDot2Decimal(height_scale,height); </div><div class="line">    <span class="keyword">if</span> (scale_w&lt;scale_h) &#123; </div><div class="line">      arrayList.add(parseDoubleToInt(scale_w*width)); </div><div class="line">      arrayList.add(parseDoubleToInt(scale_w*height)); </div><div class="line">    &#125; </div><div class="line">    <span class="keyword">else</span> &#123; </div><div class="line">      arrayList.add(parseDoubleToInt(scale_h*width)); </div><div class="line">      arrayList.add(parseDoubleToInt(scale_h*height)); </div><div class="line">    &#125; </div><div class="line">    <span class="keyword">return</span> arrayList; </div><div class="line">     </div><div class="line">  &#125; </div><div class="line">   </div><div class="line">   </div><div class="line">  <span class="comment">/*** </span></div><div class="line">   * 返回两个数a/b的小数点后三位的表示 </div><div class="line">   * <span class="doctag">@param</span> a </div><div class="line">   * <span class="doctag">@param</span> b </div><div class="line">   * <span class="doctag">@return</span> </div><div class="line">   */ </div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">getDot2Decimal</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123; </div><div class="line">     </div><div class="line">    BigDecimal bigDecimal_1 = <span class="keyword">new</span> BigDecimal(a); </div><div class="line">    BigDecimal bigDecimal_2 = <span class="keyword">new</span> BigDecimal(b); </div><div class="line">    BigDecimal bigDecimal_result = bigDecimal_1.divide(bigDecimal_2,<span class="keyword">new</span> MathContext(<span class="number">4</span>)); </div><div class="line">    Double double1 = <span class="keyword">new</span> Double(bigDecimal_result.toString()); </div><div class="line">    System.out.println(<span class="string">"相除后的double为："</span>+double1); </div><div class="line">    <span class="keyword">return</span> double1; </div><div class="line">  &#125; </div><div class="line"> </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>原作者：未知…’,’</p><p>可以压缩为任意大小，压缩后高清，不变形（留白），可以改后缀名，可以修改压缩分辨率。 </p><p></p>
+<pre><code class="language-java">package cn.com.images; 
+
+import java.awt.Graphics;  
+import java.awt.Image;  
+import java.awt.image.BufferedImage;  
+import java.io.File;  
+import java.io.IOException;  
+import java.math.BigDecimal;  
+import java.math.MathContext;  
+import java.util.ArrayList; 
+
+import javax.imageio.ImageIO; 
+
+/*** 
+ * 对图片进行操作 
+ * 
+ * @author chenzheng_java 
+ * @since 2011/7/29 
+ * 
+ */ 
+public class ImageHelper { 
+
+  private static ImageHelper imageHelper = null; 
+
+  public static ImageHelper getImageHelper() { 
+    if (imageHelper == null) { 
+      imageHelper = new ImageHelper(); 
+    } 
+    return imageHelper; 
+  } 
+
+  /*** 
+   * 按指定的比例缩放图片 
+   * 
+   * @param sourceImagePath 
+   *      源地址 
+   * @param destinationPath 
+   *      改变大小后图片的地址 
+   * @param scale 
+   *      缩放比例，如1.2 
+   */ 
+  public static void scaleImage(String sourceImagePath, 
+      String destinationPath, double scale,String format) { 
+
+    File file = new File(sourceImagePath); 
+    BufferedImage bufferedImage; 
+    try { 
+      bufferedImage = ImageIO.read(file); 
+      int width = bufferedImage.getWidth(); 
+      int height = bufferedImage.getHeight(); 
+
+      width = parseDoubleToInt(width * scale); 
+      height = parseDoubleToInt(height * scale); 
+
+      Image image = bufferedImage.getScaledInstance(width, height, 
+          Image.SCALE_SMOOTH); 
+      BufferedImage outputImage = new BufferedImage(width, height, 
+          BufferedImage.TYPE_INT_RGB); 
+      Graphics graphics = outputImage.getGraphics(); 
+      graphics.drawImage(image, 0, 0, null); 
+      graphics.dispose(); 
+
+      ImageIO.write(outputImage, format, new File(destinationPath)); 
+    } catch (IOException e) { 
+      System.out.println("scaleImage方法压缩图片时出错了"); 
+      e.printStackTrace(); 
+    } 
+
+  } 
+
+  /*** 
+   * 将图片缩放到指定的高度或者宽度 
+   * @param sourceImagePath 图片源地址 
+   * @param destinationPath 压缩完图片的地址 
+   * @param width 缩放后的宽度 
+   * @param height 缩放后的高度 
+   * @param auto 是否自动保持图片的原高宽比例 
+   * @param format 图图片格式 例如 jpg 
+   */ 
+  public static void scaleImageWithParams(String sourceImagePath, 
+      String destinationPath, int width, int height, boolean auto,String format) { 
+
+    try { 
+    File file = new File(sourceImagePath); 
+    BufferedImage bufferedImage = null; 
+    bufferedImage = ImageIO.read(file); 
+      if (auto) { 
+        ArrayList&lt;Integer&gt; paramsArrayList = getAutoWidthAndHeight(bufferedImage,width,height); 
+        width = paramsArrayList.get(0); 
+        height = paramsArrayList.get(1); 
+        System.out.println("自动调整比例，width="+width+" height="+height); 
+      } 
+
+    Image image = bufferedImage.getScaledInstance(width, height, 
+        Image.SCALE_DEFAULT); 
+    BufferedImage outputImage = new BufferedImage(width, height, 
+        BufferedImage.TYPE_INT_RGB); 
+    Graphics graphics = outputImage.getGraphics(); 
+    graphics.drawImage(image, 0, 0, null); 
+    graphics.dispose(); 
+    ImageIO.write(outputImage, format, new File(destinationPath)); 
+    } catch (Exception e) { 
+      System.out.println("scaleImageWithParams方法压缩图片时出错了"); 
+      e.printStackTrace(); 
+    } 
+
+
+  } 
+
+  /** 
+   * 将double类型的数据转换为int，四舍五入原则 
+   * 
+   * @param sourceDouble 
+   * @return 
+   */ 
+  private static int parseDoubleToInt(double sourceDouble) { 
+    int result = 0; 
+    result = (int) sourceDouble; 
+    return result; 
+  } 
+
+  /*** 
+   * 
+   * @param bufferedImage 要缩放的图片对象 
+   * @param width_scale 要缩放到的宽度 
+   * @param height_scale 要缩放到的高度 
+   * @return 一个集合，第一个元素为宽度，第二个元素为高度 
+   */ 
+  private static ArrayList&lt;Integer&gt; getAutoWidthAndHeight(BufferedImage bufferedImage,int width_scale,int height_scale){ 
+    ArrayList&lt;Integer&gt; arrayList = new ArrayList&lt;Integer&gt;(); 
+    int width = bufferedImage.getWidth(); 
+    int height = bufferedImage.getHeight(); 
+    double scale_w =getDot2Decimal( width_scale,width); 
+
+    System.out.println("getAutoWidthAndHeight width="+width + "scale_w="+scale_w); 
+    double scale_h = getDot2Decimal(height_scale,height); 
+    if (scale_w&lt;scale_h) { 
+      arrayList.add(parseDoubleToInt(scale_w*width)); 
+      arrayList.add(parseDoubleToInt(scale_w*height)); 
+    } 
+    else { 
+      arrayList.add(parseDoubleToInt(scale_h*width)); 
+      arrayList.add(parseDoubleToInt(scale_h*height)); 
+    } 
+    return arrayList; 
+
+  } 
+
+
+  /*** 
+   * 返回两个数a/b的小数点后三位的表示 
+   * @param a 
+   * @param b 
+   * @return 
+   */ 
+  public static double getDot2Decimal(int a,int b){ 
+
+    BigDecimal bigDecimal_1 = new BigDecimal(a); 
+    BigDecimal bigDecimal_2 = new BigDecimal(b); 
+    BigDecimal bigDecimal_result = bigDecimal_1.divide(bigDecimal_2,new MathContext(4)); 
+    Double double1 = new Double(bigDecimal_result.toString()); 
+    System.out.println("相除后的double为："+double1); 
+    return double1; 
+  } 
+
+} 
+</code></pre>
+
+<p>原作者：未知…</p>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com./2016/08/04/转-详解Java中使用ImageIO类对图片进行压缩的方法/" data-id="cirjbk9ht000z0veo85daj57l" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/ImageIO/">ImageIO</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Java/">Java</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-利用树莓派制作一个实时监控的遥控小车" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="./2016/07/29/利用树莓派制作一个实时监控的遥控小车/" class="article-date">
+  <time datetime="2016-07-29T15:11:15.000Z" itemprop="datePublished">2016-07-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="./2016/07/29/利用树莓派制作一个实时监控的遥控小车/">利用树莓派制作一个实时监控的遥控小车</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="content/images/2016/07/Screenshot_2016-07-22-19-16-26-543_com-lu-che.jpg" style="float:left" width="30%"><img src="content/images/2016/07/6AC706DD27F6C6B063DF0D6EBE5D5FC3.jpg" width="30%/"></p>
+<p>先上一波成果图</p>
+<p>然后就是所需要的物品</p>
+<p><img width="60%" src="/content/images/2016/07/IMG_20160729_212509.jpg"></p>
+<p>包括树莓派（我这里是2代B+版）<br><br>L298N电机驱动板<br>小车底座轮胎电机等…<br><br>树莓派摄像头<br><br>USB 无线网卡<br><br>一把杜邦线（公对公 公对母 母对母）<br></p>
+<p>因为我这里用的是移动电源为L298N供电.所以我还准备了一跟USB线。</p>
+<p>然后是组装小车.底座方面没什么好说的.注意的是电机用公对公的杜邦线连.</p>
+<p>连好后是这样的…</p>
+<p><img width="60%" src="/content/images/2016/07/IMG_20160729_215024.jpg"><br>然后是接线<br><br>电机上接出来的八根线将左边两个电机的接到OUT1和OUT2上.右边两个电机的接 OUT3和OUT4注意 OUT1和OUT2是电流的正负.注意别把一个电机的两根线都接到同一个OUT口了.<br></p>
+<p>再取两根公对公的线接12V和GND用于电机供电在取两根公对母线接5V和GND 口用于逻辑芯片供电.</p>
+<p>接好后如图</p>
+<p><img width="60%" src="/content/images/2016/07/IMG_20160729_215306.jpg"></p>
+<p>将接12V和GND的线与USB线连接.</p>
+<p>像这样.用于连接移动电源供电</p>
+<p><img width="60%" src="/content/images/2016/07/IMG_20160729_220621.jpg"></p>
+<p>然后再取八根母对母的线连接ENA、ENB和IN1-4<br><img width="60%" src="/content/images/2016/07/IMG_20160729_220358.jpg"></p>
+<p>再将另一头接到树莓派上.注意树莓派的40个针脚对应的功能不是完全一样的.上一张B+版的图.</p>
+<p><img width="60%" src="/content/images/2016/07/7d68bca4165c73a0.jpg"></p>
+<p>我这里将IN1-4接到GPIO.22-25上 ENA和ENB接到GPIO26-29上<br><br>还有之前的5V和GND两根线接到5V和0V两个口上</p>
+<p><img width="60%" src="/content/images/2016/07/IMG_20160729_220438.jpg"><br><img width="60%" src="/content/images/2016/07/IMG_20160729_220423.jpg"><br>再将摄像头插上后就算完全接好了.</p>
+<p>接下来你需要给你的树莓派装上个系统.我这里装的是NOOBS.<a href="https://www.raspberrypi.org/downloads/noobs/" target="_blank" rel="external">下载链接</a>.建议下离线版…下载完后解压到内存卡里插进树莓派然后通电…接下来就是傻瓜式操作了.</p>
+<p>====================================</p>
+<p>进入桌面之后呢…先用你的无线网卡连上WIFI.然后打开命令行…我不喜欢在 Linux里面用图形界面…感觉怪怪的…<br><br>1.更新软件源<br>2.下载控制GPIO的python库<br>3.安装GPIO库<br>4.安装flask库<br>5…….</p>
+<p>以上几步待我想起些什么的时候再补充.因为我系统里已经完成以上步骤了…</p>
+<p>然后我说明一下如何通过 python 先让小车动起来…<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> RPi.GPIO <span class="keyword">as</span> GPIO</div><div class="line">GPIO.setmode(GPIO.BOARD)</div><div class="line">GPIO.setup(<span class="number">32</span>, GPIO.OUT)</div><div class="line">GPIO.setup(<span class="number">36</span>, GPIO.OUT)</div><div class="line">GPIO.setup(<span class="number">38</span>, GPIO.OUT)</div><div class="line">GPIO.setup(<span class="number">40</span>, GPIO.OUT)</div><div class="line">GPIO.output(<span class="number">32</span>, GPIO.HIGH)</div><div class="line">GPIO.output(<span class="number">36</span>, GPIO.HIGH)</div><div class="line">GPIO.output(<span class="number">38</span>, GPIO.HIGH)</div><div class="line">GPIO.output(<span class="number">40</span>, GPIO.HIGH)</div></pre></td></tr></table></figure></p>
+<p>这些代码的意思很简单.就是将32 36 38 40这四个针脚变为输出的高电位.要注意的是.这里的编号是使用树莓派上1-40这样的编号.也就是32对应的是 GPIO.29。注意参考上面那张树莓派针脚图.</p>
+<p>这样做的目的很简单.就是通过将ENA和ENB设置为高电位后使电机工作.这时候有可能有电机已经开始转起来了.<br><br>但不要着急.还需要改变33 35 37 39这四个针脚的高低电位来使电机按自己的意愿工作起来.这里33 35 37 39就是通过控制IN1-4来调整OUT1-4的电流的.</p>
+<p><img width="60%" src="/content/images/2016/07/8B1B5E54-475E-406E-BE00-45BFC6D5C8EA.png"></p>
+<p>这里你就可以愉快的控制电机了…接下来是是摄像头和 APP 控制.这里我就不讲解了.直接在最后会上github 地址.</p>
+<p>====================================</p>
+<p>我们现在补充一些PWM调速的姿势.<br><br>现在小车是能按着我们我要求前进后退旋转了.可是他不能变速.所以ENA和ENB的用处就体现出来了.</p>
+<p>这里我就只简单的举一个例子.大家举一反三…ENA和ENB在都是高电位的时候是小车工作.那么如果ENA和ENB每1毫秒变换一次电位.就能达到半速的效果…具体实现就是通过一个死循环.将32 36 38 40设为高电位后休眠1毫秒后设为低电位.在休眠1毫秒.如此循环…</p>
+<p>=====================================</p>
+<p>啊.就说这么多.上 <a href="https://github.com/BeginLjm/Raspberry-PI-telecar" target="_blank" rel="external">github地址</a></p>
+<p>‘,’</p><p><img src="content/images/2016/07/Screenshot_2016-07-22-19-16-26-543_com-lu-che.jpg" style="float:left" width="30%"><img src="content/images/2016/07/6AC706DD27F6C6B063DF0D6EBE5D5FC3.jpg" width="30%/"></p><p></p>
+<p>先上一波成果图</p>
+
+<p>然后就是所需要的物品</p>
+
+<p><img width="60%" src="/content/images/2016/07/IMG_20160729_212509.jpg"></p>
+
+<p>包括树莓派（我这里是2代B+版）<br><br>L298N电机驱动板 <br><br>小车底座轮胎电机等…<br><br>树莓派摄像头<br><br>USB 无线网卡<br> <br><br>一把杜邦线（公对公 公对母 母对母）<br></p>
+
+<p>因为我这里用的是移动电源为L298N供电.所以我还准备了一跟USB线。</p>
+
+<p>然后是组装小车.底座方面没什么好说的.注意的是电机用公对公的杜邦线连.</p>
+
+<p>连好后是这样的…</p>
+
+<p><img width="60%" src="/content/images/2016/07/IMG_20160729_215024.jpg"> <br><br>然后是接线<br><br>电机上接出来的八根线将左边两个电机的接到OUT1和OUT2上.右边两个电机的接 OUT3和OUT4注意 OUT1和OUT2是电流的正负.注意别把一个电机的两根线都接到同一个OUT口了.<br></p>
+
+<p>再取两根公对公的线接12V和GND用于电机供电在取两根公对母线接5V和GND 口用于逻辑芯片供电.</p>
+
+<p>接好后如图</p>
+
+<p><img width="60%" src="/content/images/2016/07/IMG_20160729_215306.jpg"></p>
+
+<p>将接12V和GND的线与USB线连接.</p>
+
+<p>像这样.用于连接移动电源供电</p>
+
+<p><img width="60%" src="/content/images/2016/07/IMG_20160729_220621.jpg"></p>
+
+<p>然后再取八根母对母的线连接ENA、ENB和IN1-4<br><img width="60%" src="/content/images/2016/07/IMG_20160729_220358.jpg"></p>
+
+<p>再将另一头接到树莓派上.注意树莓派的40个针脚对应的功能不是完全一样的.上一张B+版的图.</p>
+
+<p><img width="60%" src="/content/images/2016/07/7d68bca4165c73a0.jpg"></p>
+
+<p>我这里将IN1-4接到GPIO.22-25上 ENA和ENB接到GPIO26-29上<br><br>还有之前的5V和GND两根线接到5V和0V两个口上</p>
+
+<p><img width="60%" src="/content/images/2016/07/IMG_20160729_220438.jpg"> <br><br><img width="60%" src="/content/images/2016/07/IMG_20160729_220423.jpg"> <br><br>再将摄像头插上后就算完全接好了.</p>
+
+<p>接下来你需要给你的树莓派装上个系统.我这里装的是NOOBS.<a href="https://www.raspberrypi.org/downloads/noobs/" target="_blank" rel="external">下载链接</a>.建议下离线版…下载完后解压到内存卡里插进树莓派然后通电…接下来就是傻瓜式操作了.</p>
+
+<p>====================================</p>
+
+<p>进入桌面之后呢…先用你的无线网卡连上WIFI.然后打开命令行…我不喜欢在 Linux里面用图形界面…感觉怪怪的…<br><br>1.更新软件源 <br><br>2.下载控制GPIO的python库 <br><br>3.安装GPIO库 <br><br>4.安装flask库 <br><br>5…….</p>
+
+<p>以上几步待我想起些什么的时候再补充.因为我系统里已经完成以上步骤了…</p>
+
+<p>然后我说明一下如何通过 python 先让小车动起来…</p>
+
+<pre><code class="language-python">    import RPi.GPIO as GPIO
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(32, GPIO.OUT)
+    GPIO.setup(36, GPIO.OUT)
+    GPIO.setup(38, GPIO.OUT)
+    GPIO.setup(40, GPIO.OUT)
+    GPIO.output(32, GPIO.HIGH)
+    GPIO.output(36, GPIO.HIGH)
+    GPIO.output(38, GPIO.HIGH)
+    GPIO.output(40, GPIO.HIGH)
+</code></pre>
+
+<p>这些代码的意思很简单.就是将32 36 38 40这四个针脚变为输出的高电位.要注意的是.这里的编号是使用树莓派上1-40这样的编号.也就是32对应的是 GPIO.29。注意参考上面那张树莓派针脚图.</p>
+
+<p>这样做的目的很简单.就是通过将ENA和ENB设置为高电位后使电机工作.这时候有可能有电机已经开始转起来了.<br><br>但不要着急.还需要改变33 35 37 39这四个针脚的高低电位来使电机按自己的意愿工作起来.这里33 35 37 39就是通过控制IN1-4来调整OUT1-4的电流的.</p>
+
+<p><img width="60%" src="/content/images/2016/07/8B1B5E54-475E-406E-BE00-45BFC6D5C8EA.png"></p>
+
+<p>这里你就可以愉快的控制电机了…接下来是是摄像头和 APP 控制.这里我就不讲解了.直接在最后会上github 地址.</p>
+
+<p>====================================</p>
+
+<p>我们现在补充一些PWM调速的姿势.<br><br>现在小车是能按着我们我要求前进后退旋转了.可是他不能变速.所以ENA和ENB的用处就体现出来了.</p>
+
+<p>这里我就只简单的举一个例子.大家举一反三…ENA和ENB在都是高电位的时候是小车工作.那么如果ENA和ENB每1毫秒变换一次电位.就能达到半速的效果…具体实现就是通过一个死循环.将32 36 38 40设为高电位后休眠1毫秒后设为低电位.在休眠1毫秒.如此循环…</p>
+
+<p>=====================================</p>
+
+<p>啊.就说这么多.上 <a href="https://github.com/BeginLjm/Raspberry-PI-telecar" target="_blank" rel="external">github地址</a></p>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com./2016/07/29/利用树莓派制作一个实时监控的遥控小车/" data-id="cirjbk9hg000k0veorvs31cub" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/树莓派/">树莓派</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-TabLayout（切换卡）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="./2016/05/02/TabLayout（切换卡）/" class="article-date">
+  <time datetime="2016-05-01T23:45:19.000Z" itemprop="datePublished">2016-05-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="./2016/05/02/TabLayout（切换卡）/">TabLayout（切换卡）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>首先在 AS 中引入Material Design Support 包<br><img src="content/images/2016/05/80E8BDCD-05DD-4518-8C87-55FB9869864F.png" alt=""><br>在布局文件中使用 TabLayout<br><img src="content/images/2016/05/7C73175B-D312-4E83-8DC5-D3A06D808C96.png" alt=""><br>JAVA 文件中获取控件<br><img src="content/images/2016/05/3B8AD5F0-F3FE-423C-A2BF-62DE2F3DB950.png" alt=""><br>设置适配器.绑定视图<br><img src="content/images/2016/05/6DBD1FCB-0A2D-42A5-8B18-CD738FF016AE.png" alt=""><br>适配器<br><img src="content/images/2016/05/963C75EF-72AA-4BCB-AA8D-68951C53BA12.png" alt=""><br>vpMain 是绑定的视图.<br>创建视图<br><img src="content/images/2016/05/4E5F4172-70D8-4BF5-975D-979C6083C40F.png" alt=""><br>为 vpMain 设置同一个适配器并添加监听方法.具体 ViewPager 使用可以参考<br><a href="http://developer.android.com/intl/zh-cn/reference/android/support/v4/view/ViewPager.html" target="_blank" rel="external">http://developer.android.com/intl/zh-cn/reference/android/support/v4/view/ViewPager.html</a><br><img src="content/images/2016/05/B1DC056B-99C7-4979-90C7-DC4CE14EE959.png" alt="">‘,’</p><p>首先在 AS 中引入Material Design Support 包<br><img src="content/images/2016/05/80E8BDCD-05DD-4518-8C87-55FB9869864F.png" alt=""><br>在布局文件中使用 TabLayout<br><img src="content/images/2016/05/7C73175B-D312-4E83-8DC5-D3A06D808C96.png" alt=""><br>JAVA 文件中获取控件 <br><br><img src="content/images/2016/05/3B8AD5F0-F3FE-423C-A2BF-62DE2F3DB950.png" alt=""><br>设置适配器.绑定视图<br><img src="content/images/2016/05/6DBD1FCB-0A2D-42A5-8B18-CD738FF016AE.png" alt=""><br>适配器<br><img src="content/images/2016/05/963C75EF-72AA-4BCB-AA8D-68951C53BA12.png" alt=""><br>vpMain 是绑定的视图. <br><br>创建视图<br><img src="content/images/2016/05/4E5F4172-70D8-4BF5-975D-979C6083C40F.png" alt=""><br>为 vpMain 设置同一个适配器并添加监听方法.具体 ViewPager 使用可以参考<br><a href="http://developer.android.com/intl/zh-cn/reference/android/support/v4/view/ViewPager.html" target="_blank" rel="external">http://developer.android.com/intl/zh-cn/reference/android/support/v4/view/ViewPager.html</a> <br><br><img src="content/images/2016/05/B1DC056B-99C7-4979-90C7-DC4CE14EE959.png" alt=""></p><p></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com./2016/05/02/TabLayout（切换卡）/" data-id="cirjbk9gs00060veozs0bm2mc" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/TabLayout/">TabLayout</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-DrawerLayout（侧滑菜单）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="./2016/05/02/DrawerLayout（侧滑菜单）/" class="article-date">
+  <time datetime="2016-05-01T23:41:18.000Z" itemprop="datePublished">2016-05-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="./2016/05/02/DrawerLayout（侧滑菜单）/">Idea 通过 Maven 配置 Spring MVC+Hibernate</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>首先在 AS 中引入Material Design Support 包<br><img src="content/images/2016/05/56086CA3-627A-452F-823A-98F5EEC6C552.png" alt=""><br>在布局文件中使用 DrawerLayout<br><img src="content/images/2016/05/DC32A29A-428C-4982-8023-3FE41EE453EF.png" alt=""><br>其中 FrameLayout 是界面视图 RelativeLayout 是侧滑视图 其中的 include 是侧滑菜单布局</p>
+<p>在 JAVA 文件中获取侧滑菜单控件及布局<br><img src="content/images/2016/05/25F8BFE3-63FB-4A17-9C28-066E0AC21C1F.png" alt=""><br>关闭侧滑菜单<br><img src="content/images/2016/05/49A28A26-6550-4A80-B307-61E230A55BE5.png" alt=""><br>打开侧滑菜单<br><img src="content/images/2016/05/11D2F621-8D8E-4E80-903F-272F31FC47A5.png" alt="">‘,’</p><p>首先在 AS 中引入Material Design Support 包<br><img src="content/images/2016/05/56086CA3-627A-452F-823A-98F5EEC6C552.png" alt=""><br>在布局文件中使用 DrawerLayout<br><img src="content/images/2016/05/DC32A29A-428C-4982-8023-3FE41EE453EF.png" alt=""><br>其中 FrameLayout 是界面视图 RelativeLayout 是侧滑视图 其中的 include 是侧滑菜单布局</p><p></p>
+<p>在 JAVA 文件中获取侧滑菜单控件及布局<br><img src="content/images/2016/05/25F8BFE3-63FB-4A17-9C28-066E0AC21C1F.png" alt=""><br>关闭侧滑菜单<br><img src="content/images/2016/05/49A28A26-6550-4A80-B307-61E230A55BE5.png" alt=""><br>打开侧滑菜单<br><img src="content/images/2016/05/11D2F621-8D8E-4E80-903F-272F31FC47A5.png" alt=""></p>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com./2016/05/02/DrawerLayout（侧滑菜单）/" data-id="cirjbk9gb00010veo5lkhtegs" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Spring/">Spring</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Idea 通过 Maven 配置 Spring MVC+Hibernate" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="./2016/04/24/Idea 通过 Maven 配置 Spring MVC+Hibernate/" class="article-date">
+  <time datetime="2016-04-24T07:46:26.000Z" itemprop="datePublished">2016-04-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="./2016/04/24/Idea 通过 Maven 配置 Spring MVC+Hibernate/">Idea 通过 Maven 配置 Spring MVC+Hibernate</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#####1.新建项目<br>选择 Maven<br><br>勾选上 Create from archetype<br><br>选择 org.apache.maven.archetypes:maven-archetype-webapp<br></p>
+<p><img src="content/images/2016/04/-----2016-04-24-15-49-09.png" alt=""></p>
+<p>next<br></p>
+<p>填写 GroupId 和 ArifactId<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">GroupID是项目组织唯一的标识符，实际对应JAVA的包的结构，是main目录里java的目录结构。</div><div class="line">ArtifactID就是项目的唯一的标识符，实际对应项目的名称，就是项目根目录的名称。</div><div class="line">一般GroupID就是填com.leafive.test这样子</div></pre></td></tr></table></figure></p>
+<p><img src="content/images/2016/04/-----2016-04-24-16-00-31.png" alt=""></p>
+<p>接下来就是傻瓜式的下一步.<br><br>进入编辑器后等待编辑器自动构建完成项目后打开==pom.xml==文件.将其修改为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line">    &lt;properties&gt;</div><div class="line">        &lt;spring.version&gt;4.2.5.RELEASE&lt;/spring.version&gt;</div><div class="line">        &lt;spring-data.version&gt;1.10.1.RELEASE&lt;/spring-data.version&gt;</div><div class="line">    &lt;/properties&gt;</div><div class="line">    &lt;dependencies&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;junit&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;junit&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;3.8.1&lt;/version&gt;</div><div class="line">            &lt;scope&gt;test&lt;/scope&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-core&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-web&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;javax.servlet&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;servlet-api&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;2.5&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;javax.servlet.jsp&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;jsp-api&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;2.1&lt;/version&gt;</div><div class="line">            &lt;scope&gt;provided&lt;/scope&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-test&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring.version&#125;&lt;/version&gt;</div><div class="line">            &lt;scope&gt;test&lt;/scope&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;jstl&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;jstl&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;1.2&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.springframework.data&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spring-data-jpa&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;spring-data.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.hibernate.javax.persistence&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;hibernate-jpa-2.0-api&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;1.0.0.Final&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.hibernate&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;hibernate-entitymanager&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;3.6.10.Final&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;mysql&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;5.1.34&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.json&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;json&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;20080701&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.apache.struts&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;struts2-core&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;2.3.28.1&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">    &lt;/dependencies&gt;</div><div class="line">```</div><div class="line">等待编译器自动完成下载和导入后修改 ==web.xml== 文件</div></pre></td></tr></table></figure></p>
+<p><web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1"><br>  <display-name>Archetype Created Web Application</display-name><br>    <servlet><br>        <servlet-name>mvc-dispatcher</servlet-name><br>        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class><br>        <load-on-startup>1</load-on-startup><br>    </servlet></web-app></p>
+<pre><code>&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;mvc-dispatcher&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+&lt;filter&gt;
+    &lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;encoding&lt;/param-name&gt;
+        &lt;param-value&gt;UTF-8&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;forceEncoding&lt;/param-name&gt;
+        &lt;param-value&gt;true&lt;/param-value&gt;
+    &lt;/init-param&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+</code></pre><p><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">完成后进入项目设计菜单新建一个文件夹</div><div class="line">![](content/images/2016/05/-----2016-05-01-13-00-56.png)</div><div class="line">之后再将其设置为 Sources 文件夹</div><div class="line">![](content/images/2016/05/-----2016-05-01-13-02-11.png)</div><div class="line">在 java 文件夹中下创建如下四个包</div><div class="line">![](content/images/2016/05/-----2016-05-01-15-54-17.png)</div><div class="line">然后在 WEB-INF 目录下创建 mvc-dispatcher-servlet.xml 文件</div><div class="line">内容如下</div><div class="line">`</div></pre></td></tr></table></figure></p>
+<p>&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;</p>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xsi:schemalocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+<pre><code>&lt;!--指明 controller 所在包，并扫描其中的注解--&gt;
+&lt;context:component-scan base-package=&quot;com.spring.controller&quot;/&gt;
+
+&lt;!-- 静态资源(js、image等)的访问 --&gt;
+&lt;mvc:default-servlet-handler/&gt;
+
+&lt;!-- 开启注解 --&gt;
+&lt;mvc:annotation-driven/&gt;
+
+&lt;!--ViewResolver 视图解析器--&gt;
+&lt;!--用于支持Servlet、JSP视图解析--&gt;
+&lt;bean id=&quot;jspViewResolver&quot; class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+    &lt;property name=&quot;viewClass&quot; value=&quot;org.springframework.web.servlet.view.JstlView&quot;/&gt;
+    &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/pages/&quot;/&gt;
+    &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;/&gt;
+&lt;/bean&gt;
+</code></pre><p></p></beans><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">在 Controller 包中创建 MainController.java 文件</div><div class="line">内容如下</div><div class="line">`</div></pre></td></tr></table></figure><p></p>
+<p>@Controller<br>public class MainController {</p>
+<pre><code>@RequestMapping(value = &quot;/&quot;, method = RequestMethod.GET)
+public String index() {
+    return &quot;index&quot;;
+}
+</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">然后在 WEB-INF 目录下创建 pages 目录.在该目录中创建 index.jsp 文件</div><div class="line">内容如下</div><div class="line">`</div></pre></td></tr></table></figure></p>
+<p>&lt;%@ page contentType=”text/html;charset=UTF-8” language=”java” %&gt;<br>&lt;!DOCTYPE html&gt;</p>
+<p><html lang="zh-CN"></html></p>
+<p><head><br>    <meta charset="utf-8"><br>    <meta http-equiv="X-UA-Compatible" content="IE=edge"><br>    <meta name="viewport" content="width=device-width, initial-scale=1"><br>    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ --><br>    <title>SpringMVC Demo 首页</title></head></p>
+<pre><code>&lt;!-- 新 Bootstrap 核心 CSS 文件 --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css&quot;&gt;
+
+&lt;!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries --&gt;
+&lt;!-- WARNING: Respond.js doesn&apos;&apos;t work if you view the page via file:// --&gt;
+&lt;!--[if lt IE 9]&gt;
+&lt;script src=&quot;//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;//cdn.bootcss.com/respond.js/1.4.2/respond.min.js&quot;&gt;&lt;/script&gt;
+&lt;![endif]--&gt;
+</code></pre><p></p>
+<p><body></body></p>
+<h1>这里是SpringMVC Demo首页</h1>
+
+<h3>出现此页面，说明配置成功。</h3>
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">这时候 SpringMVC 的配置已经基本完成了.直接运行项目就可以看到</div><div class="line">![](content/images/2016/05/-----2016-05-01-21-59-02-1.png)</div><div class="line">然后先把 Spring 放一边.来配置一下Hibernate.&lt;br&gt;</div><div class="line">首先右键项目选择 Add Framework Support</div><div class="line">![](content/images/2016/05/-----2016-05-01-22-00-57.png)</div><div class="line">然后勾选上 JavaEE Persistence 后选择 Hibernate 点击 OK</div><div class="line">![](content/images/2016/05/-----2016-05-01-22-15-36.png)</div><div class="line">这时候已经导入了 Hibernate 的 jar 包.然后点击编辑器的左下角的 Persistence在 SpringMVC 上右键.选择By DataBase Schema</div><div class="line">![](content/images/2016/05/-----2016-05-01-15-59-21.png)</div><div class="line">点击 Choose Data Source 旁的... 之后点击+号选择 MySql </div><div class="line">![](content/images/2016/05/-----2016-05-01-16-00-34.png)</div><div class="line">填写完成后点击 OK</div><div class="line">![](content/images/2016/05/-----2016-05-01-16-01-25.png)</div><div class="line">PS:数据库的创建我不介绍.直接上数据库的结构图.</div><div class="line">user 表</div><div class="line">![](content/images/2016/05/-----2016-05-01-16-03-03.png)</div><div class="line">blog 表</div><div class="line">![](content/images/2016/05/-----2016-05-01-16-02-53.png)</div><div class="line">之后返回到上一级页面.然后选择包.点击刷新.选上表及内容后点击 OK</div><div class="line">![](content/images/2016/05/-----2016-05-01-22-18-11.png)</div><div class="line">修改一下 persistence.xml 文件</div><div class="line">如下</div><div class="line">`</div></pre></td></tr></table></figure>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="defaultPersistenceUnit" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <properties>
+            <!-- 使用MySQL方言 -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect">
+            <!-- 数据库连接的URL地址 -->
+            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/springdemo">
+            <!-- 数据库连接的驱动 -->
+            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver">
+            <!-- 数据库连接的用户名 -->
+            <property name="hibernate.connection.username" value="root">
+            <!-- 数据库连接的密码 -->
+            <property name="hibernate.connection.password" value="Lu935226769">
+            <!-- 显示SQL语句 -->
+            <property name="hibernate.show_sql" value="true">
+
+            <property name="hibernate.connection.useUnicode" value="true">
+            <property name="hibernate.connection.characterEncoding" value="UTF-8">
+
+            <!-- 在显示SQL语句时格式化语句 -->
+            <property name="hibernate.format_sql" value="true">
+            <property name="hibernate.use_sql_comments" value="false">
+            <!-- 自动输出schema创建DDL语句 -->
+            <property name="hibernate.hbm2ddl.auto" value="update">
+
+            <!-- 数据库连接超时后自动重连 -->
+            <property name="hibernate.connection.autoReconnect" value="true">
+            <property name="connection.autoReconnectForPools" value="true">
+            <property name="connection.is-connection-validation-required" value="true">
+        </property></property></property></property></property></property></property></property></property></property></property></property></property></property></properties>
+    </persistence-unit>
+</persistence>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">这时候就已经完成了通过 Hibernate 导入数据库的操作&lt;br&gt;</div><div class="line">但需要为 model 创建 repository &lt;br&gt;</div><div class="line">内容如下</div><div class="line">![](content/images/2016/05/-----2016-05-01-16-12-20.png)</div><div class="line">然后需要修改 mvc-dispatcher-servlet.xml 文件.加入以下内容...</div><div class="line">`</div></pre></td></tr></table></figure>
+
+       <!-- 表示JPA Repository所在的包 -->
+       <jpa:repositories base-package="com.springmvc.repository">
+
+       <!-- 链接到persistence.xml -->
+       <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+              <property name="persistenceUnitName" value="defaultPersistenceUnit">
+       </property></bean>
+
+       <!-- 事务管理 -->
+       <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+              <property name="entityManagerFactory" ref="entityManagerFactory">
+       </property></bean>
+
+       <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+              <property name="annotatedClasses">
+                     <list>
+                            <value>com.springmvc.model.Blog</value>
+                            <value>com.springmvc.model.User</value>
+                     </list>
+              </property>
+              <property name="hibernateProperties">
+                     <props>
+                            <prop key="hibernate.connection.url">jdbc:mysql://localhost:3306/SpringDemo</prop>
+                            <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
+                     </props>
+              </property>
+       </bean>
+
+       <!-- 开启事务管理注解 -->
+       <tx:annotation-driven transaction-manager="transactionManager">
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">再在 MainController 文件中加入以下内容</div><div class="line">`</div></pre></td></tr></table></figure>
+
+    @Autowired
+    UserRepository userRepository;
+
+    @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
+    public String getUsers(ModelMap modelMap) {
+        List<user> list = userRepository.findAll();
+        modelMap.addAttribute("userList", list);
+        return "admin/users";
+    }
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">在 pages 下创建目录 admin 中创建 users.jsp 文件</div><div class="line">内容如下</div><div class="line">`</div></pre></td></tr></table></figure>
+
+<%@ page="" contenttype="text/html;charset=UTF-8" language="java" %="">
+<%@ taglib="" prefix="c" uri="http://java.sun.com/jsp/jstl/core" %="">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+  <title>SpringMVC 用户管理</title>
+
+  <!-- 新 Bootstrap 核心 CSS 文件 -->
+  <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn''t work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="container">
+  <h1>SpringMVC 博客系统-用户管理</h1>
+  <hr>
+
+  <h3>所有用户 <a href="/admin/users/add" type="button" class="btn btn-primary btn-sm">添加</a></h3>
+
+  <!-- 如果用户列表为空 -->
+  <c:if test="${empty userList}">
+    <div class="alert alert-warning" role="alert">
+      <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>User表为空，请<a href="/admin/users/add" type="button" class="btn btn-primary btn-sm">添加</a>
+    </div>
+  </c:if>
+
+  <!-- 如果用户列表非空 -->
+  <c:if test="${!empty userList}">
+    <table class="table table-bordered table-striped">
+      <tr>
+        <th>ID</th>
+        <th>昵称</th>
+        <th>姓名</th>
+        <th>密码</th>
+        <th>操作</th>
+      </tr>
+
+      <c:foreach items="${userList}" var="user">
+        <tr>
+          <td>${user.id}</td>
+          <td>${user.nickname}</td>
+          <td>${user.firstName} ${user.lastName}</td>
+          <td>${user.password}</td>
+          <td>
+            <a href="/admin/users/show/${user.id}" type="button" class="btn btn-sm btn-success">详情</a>
+            <a href="/admin/users/update/${user.id}" type="button" class="btn btn-sm btn-warning">修改</a>
+            <a href="/admin/users/delete/${user.id}" type="button" class="btn btn-sm btn-danger">删除</a>
+          </td>
+        </tr>
+      </c:foreach>
+    </table>
+  </c:if>
+</div>
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<p><script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script><br></p></body><br></html><br>```<br>这时候运行项目访问<a href="http://localhost:8080/admin/users" target="_blank" rel="external">http://localhost:8080/admin/users</a> 就可以看到<br><img src="content/images/2016/05/-----2016-05-01-23-42-09.png" alt=""><br>‘,’<h5 id="1">1.新建项目</h5><p></p>
+<p>选择 Maven<br><br>勾选上 Create from archetype<br><br>选择 org.apache.maven.archetypes:maven-archetype-webapp<br></p>
+
+<p><img src="content/images/2016/04/-----2016-04-24-15-49-09.png" alt=""></p>
+
+<p>next<br></p>
+
+<p>填写 GroupId 和 ArifactId</p>
+
+<pre><code>GroupID是项目组织唯一的标识符，实际对应JAVA的包的结构，是main目录里java的目录结构。  
+ArtifactID就是项目的唯一的标识符，实际对应项目的名称，就是项目根目录的名称。  
+一般GroupID就是填com.leafive.test这样子
+</code></pre>
+
+<p><img src="content/images/2016/04/-----2016-04-24-16-00-31.png" alt=""></p>
+
+<p>接下来就是傻瓜式的下一步.<br><br>进入编辑器后等待编辑器自动构建完成项目后打开<mark>pom.xml</mark>文件.将其修改为</p>
+
+<pre><code class="language-`">    &lt;properties&gt;
+        &lt;spring.version&gt;4.2.5.RELEASE&lt;/spring.version&gt;
+        &lt;spring-data.version&gt;1.10.1.RELEASE&lt;/spring-data.version&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;3.8.1&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-core&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+            &lt;artifactId&gt;servlet-api&lt;/artifactId&gt;
+            &lt;version&gt;2.5&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;javax.servlet.jsp&lt;/groupId&gt;
+            &lt;artifactId&gt;jsp-api&lt;/artifactId&gt;
+            &lt;version&gt;2.1&lt;/version&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-test&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;jstl&lt;/groupId&gt;
+            &lt;artifactId&gt;jstl&lt;/artifactId&gt;
+            &lt;version&gt;1.2&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.data&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-data-jpa&lt;/artifactId&gt;
+            &lt;version&gt;${spring-data.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.hibernate.javax.persistence&lt;/groupId&gt;
+            &lt;artifactId&gt;hibernate-jpa-2.0-api&lt;/artifactId&gt;
+            &lt;version&gt;1.0.0.Final&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+            &lt;artifactId&gt;hibernate-entitymanager&lt;/artifactId&gt;
+            &lt;version&gt;3.6.10.Final&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;mysql&lt;/groupId&gt;
+            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+            &lt;version&gt;5.1.34&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.json&lt;/groupId&gt;
+            &lt;artifactId&gt;json&lt;/artifactId&gt;
+            &lt;version&gt;20080701&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.struts&lt;/groupId&gt;
+            &lt;artifactId&gt;struts2-core&lt;/artifactId&gt;
+            &lt;version&gt;2.3.28.1&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+</code></pre>
+
+<p>等待编译器自动完成下载和导入后修改 <mark>web.xml</mark> 文件</p>
+
+<pre><code class="language-`">&lt;web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"  
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1"&gt;
+  &lt;display-name&gt;Archetype Created Web Application&lt;/display-name&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;mvc-dispatcher&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;mvc-dispatcher&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+    &lt;filter&gt;
+        &lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;
+        &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;encoding&lt;/param-name&gt;
+            &lt;param-value&gt;UTF-8&lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;forceEncoding&lt;/param-name&gt;
+            &lt;param-value&gt;true&lt;/param-value&gt;
+        &lt;/init-param&gt;
+    &lt;/filter&gt;
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;/filter-mapping&gt;
+&lt;/web-app&gt;  
+</code></pre>
+
+<p>完成后进入项目设计菜单新建一个文件夹<br><img src="content/images/2016/05/-----2016-05-01-13-00-56.png" alt=""><br>之后再将其设置为 Sources 文件夹<br><img src="content/images/2016/05/-----2016-05-01-13-02-11.png" alt=""><br>在 java 文件夹中下创建如下四个包<br><img src="content/images/2016/05/-----2016-05-01-15-54-17.png" alt=""><br>然后在 WEB-INF 目录下创建 mvc-dispatcher-servlet.xml 文件<br>内容如下</p>
+
+<pre><code class="language-`">&lt;?xml version="1.0" encoding="UTF-8"?&gt;  
+&lt;beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd"&gt;
+
+    &lt;!--指明 controller 所在包，并扫描其中的注解--&gt;
+    &lt;context:component-scan base-package="com.spring.controller"/&gt;
+
+    &lt;!-- 静态资源(js、image等)的访问 --&gt;
+    &lt;mvc:default-servlet-handler/&gt;
+
+    &lt;!-- 开启注解 --&gt;
+    &lt;mvc:annotation-driven/&gt;
+
+    &lt;!--ViewResolver 视图解析器--&gt;
+    &lt;!--用于支持Servlet、JSP视图解析--&gt;
+    &lt;bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"&gt;
+        &lt;property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/&gt;
+        &lt;property name="prefix" value="/WEB-INF/pages/"/&gt;
+        &lt;property name="suffix" value=".jsp"/&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;  
+</code></pre>
+
+<p>在 Controller 包中创建 MainController.java 文件<br>内容如下</p>
+
+<pre><code class="language-`">@Controller
+public class MainController {
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String index() {
+        return "index";
+    }
+}
+</code></pre>
+
+<p>然后在 WEB-INF 目录下创建 pages 目录.在该目录中创建 index.jsp 文件<br>内容如下</p>
+
+<pre><code class="language-`">&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;  
+&lt;!DOCTYPE html&gt;  
+&lt;html lang="zh-CN"&gt;  
+&lt;head&gt;  
+    &lt;meta charset="utf-8"&gt;
+    &lt;meta http-equiv="X-UA-Compatible" content="IE=edge"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+    &lt;!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ --&gt;
+    &lt;title&gt;SpringMVC Demo 首页&lt;/title&gt;
+
+    &lt;!-- 新 Bootstrap 核心 CSS 文件 --&gt;
+    &lt;link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"&gt;
+
+    &lt;!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries --&gt;
+    &lt;!-- WARNING: Respond.js doesn''t work if you view the page via file:// --&gt;
+    &lt;!--[if lt IE 9]&gt;
+    &lt;script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"&gt;&lt;/script&gt;
+    &lt;script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"&gt;&lt;/script&gt;
+    &lt;![endif]--&gt;
+&lt;/head&gt;  
+&lt;body&gt;  
+&lt;h1&gt;这里是SpringMVC Demo首页&lt;/h1&gt;
+
+&lt;h3&gt;出现此页面，说明配置成功。&lt;/h3&gt;
+
+&lt;!-- jQuery文件。务必在bootstrap.min.js 之前引入 --&gt;  
+&lt;script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- 最新的 Bootstrap 核心 JavaScript 文件 --&gt;  
+&lt;script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"&gt;&lt;/script&gt;  
+&lt;/body&gt;  
+&lt;/html&gt;  
+</code></pre>
+
+<p>这时候 SpringMVC 的配置已经基本完成了.直接运行项目就可以看到<br><img src="content/images/2016/05/-----2016-05-01-21-59-02-1.png" alt=""><br>然后先把 Spring 放一边.来配置一下Hibernate.<br><br>首先右键项目选择 Add Framework Support<br><img src="content/images/2016/05/-----2016-05-01-22-00-57.png" alt=""><br>然后勾选上 JavaEE Persistence 后选择 Hibernate 点击 OK<br><img src="content/images/2016/05/-----2016-05-01-22-15-36.png" alt=""><br>这时候已经导入了 Hibernate 的 jar 包.然后点击编辑器的左下角的 Persistence在 SpringMVC 上右键.选择By DataBase Schema<br><img src="content/images/2016/05/-----2016-05-01-15-59-21.png" alt=""><br>点击 Choose Data Source 旁的… 之后点击+号选择 MySql<br><img src="content/images/2016/05/-----2016-05-01-16-00-34.png" alt=""><br>填写完成后点击 OK<br><img src="content/images/2016/05/-----2016-05-01-16-01-25.png" alt=""><br>PS:数据库的创建我不介绍.直接上数据库的结构图. <br><br>user 表 <br><br><img src="content/images/2016/05/-----2016-05-01-16-03-03.png" alt=""><br>blog 表 <br><br><img src="content/images/2016/05/-----2016-05-01-16-02-53.png" alt=""><br>之后返回到上一级页面.然后选择包.点击刷新.选上表及内容后点击 OK<br><img src="content/images/2016/05/-----2016-05-01-22-18-11.png" alt=""><br>修改一下 persistence.xml 文件<br>如下</p>
+
+<pre><code class="language-`">&lt;?xml version="1.0" encoding="UTF-8"?&gt;  
+&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0"&gt;
+
+    &lt;persistence-unit name="defaultPersistenceUnit"  transaction-type="RESOURCE_LOCAL"&gt;
+        &lt;provider&gt;org.hibernate.ejb.HibernatePersistence&lt;/provider&gt;
+        &lt;properties&gt;
+            &lt;!-- 使用MySQL方言 --&gt;
+            &lt;property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/&gt;
+            &lt;!-- 数据库连接的URL地址 --&gt;
+            &lt;property name="hibernate.connection.url"
+                      value="jdbc:mysql://localhost:3306/springdemo"/&gt;
+            &lt;!-- 数据库连接的驱动 --&gt;
+            &lt;property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/&gt;
+            &lt;!-- 数据库连接的用户名 --&gt;
+            &lt;property name="hibernate.connection.username" value="root"/&gt;
+            &lt;!-- 数据库连接的密码 --&gt;
+            &lt;property name="hibernate.connection.password" value="Lu935226769"/&gt;
+            &lt;!-- 显示SQL语句 --&gt;
+            &lt;property name="hibernate.show_sql" value="true"/&gt;
+
+            &lt;property name="hibernate.connection.useUnicode" value="true"/&gt;
+            &lt;property name="hibernate.connection.characterEncoding" value="UTF-8"/&gt;
+
+            &lt;!-- 在显示SQL语句时格式化语句 --&gt;
+            &lt;property name="hibernate.format_sql" value="true"/&gt;
+            &lt;property name="hibernate.use_sql_comments" value="false"/&gt;
+            &lt;!-- 自动输出schema创建DDL语句 --&gt;
+            &lt;property name="hibernate.hbm2ddl.auto" value="update"/&gt;
+
+            &lt;!-- 数据库连接超时后自动重连 --&gt;
+            &lt;property name="hibernate.connection.autoReconnect" value="true"/&gt;
+            &lt;property name="connection.autoReconnectForPools" value="true"/&gt;
+            &lt;property name="connection.is-connection-validation-required" value="true"/&gt;
+        &lt;/properties&gt;
+    &lt;/persistence-unit&gt;
+&lt;/persistence&gt;  
+</code></pre>
+
+<p>这时候就已经完成了通过 Hibernate 导入数据库的操作<br><br>但需要为 model 创建 repository <br><br>内容如下<br><img src="content/images/2016/05/-----2016-05-01-16-12-20.png" alt=""><br>然后需要修改 mvc-dispatcher-servlet.xml 文件.加入以下内容…</p>
+
+<pre><code class="language-`">       &lt;!-- 表示JPA Repository所在的包 --&gt;
+       &lt;jpa:repositories base-package="com.springmvc.repository"/&gt;
+
+       &lt;!-- 链接到persistence.xml --&gt;
+       &lt;bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean"&gt;
+              &lt;property name="persistenceUnitName" value="defaultPersistenceUnit"/&gt;
+       &lt;/bean&gt;
+
+       &lt;!-- 事务管理 --&gt;
+       &lt;bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"&gt;
+              &lt;property name="entityManagerFactory" ref="entityManagerFactory"/&gt;
+       &lt;/bean&gt;
+
+       &lt;bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"&gt;
+              &lt;property name="annotatedClasses"&gt;
+                     &lt;list&gt;
+                            &lt;value&gt;com.springmvc.model.Blog&lt;/value&gt;
+                            &lt;value&gt;com.springmvc.model.User&lt;/value&gt;
+                     &lt;/list&gt;
+              &lt;/property&gt;
+              &lt;property name="hibernateProperties"&gt;
+                     &lt;props&gt;
+                            &lt;prop key="hibernate.connection.url"&gt;jdbc:mysql://localhost:3306/SpringDemo&lt;/prop&gt;
+                            &lt;prop key="hibernate.connection.driver_class"&gt;com.mysql.jdbc.Driver&lt;/prop&gt;
+                     &lt;/props&gt;
+              &lt;/property&gt;
+       &lt;/bean&gt;
+
+       &lt;!-- 开启事务管理注解 --&gt;
+       &lt;tx:annotation-driven transaction-manager="transactionManager"/&gt;
+</code></pre>
+
+<p>再在 MainController 文件中加入以下内容</p>
+
+<pre><code class="language-`">    @Autowired
+    UserRepository userRepository;
+
+    @RequestMapping(value = "/admin/users", method = RequestMethod.GET)
+    public String getUsers(ModelMap modelMap) {
+        List&lt;User&gt; list = userRepository.findAll();
+        modelMap.addAttribute("userList", list);
+        return "admin/users";
+    }
+</code></pre>
+
+<p>在 pages 下创建目录 admin 中创建 users.jsp 文件<br>内容如下</p>
+
+<pre><code class="language-`">&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;  
+&lt;%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %&gt;  
+&lt;!DOCTYPE html&gt;  
+&lt;html lang="zh-CN"&gt;  
+&lt;head&gt;  
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta http-equiv="X-UA-Compatible" content="IE=edge"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ --&gt;
+  &lt;title&gt;SpringMVC 用户管理&lt;/title&gt;
+
+  &lt;!-- 新 Bootstrap 核心 CSS 文件 --&gt;
+  &lt;link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"&gt;
+
+  &lt;!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries --&gt;
+  &lt;!-- WARNING: Respond.js doesn''t work if you view the page via file:// --&gt;
+  &lt;!--[if lt IE 9]&gt;
+  &lt;script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"&gt;&lt;/script&gt;
+  &lt;script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"&gt;&lt;/script&gt;
+  &lt;![endif]--&gt;
+&lt;/head&gt;  
+&lt;body&gt;  
+&lt;div class="container"&gt;  
+  &lt;h1&gt;SpringMVC 博客系统-用户管理&lt;/h1&gt;
+  &lt;hr/&gt;
+
+  &lt;h3&gt;所有用户 &lt;a href="/admin/users/add" type="button" class="btn btn-primary btn-sm"&gt;添加&lt;/a&gt;&lt;/h3&gt;
+
+  &lt;!-- 如果用户列表为空 --&gt;
+  &lt;c:if test="${empty userList}"&gt;
+    &lt;div class="alert alert-warning" role="alert"&gt;
+      &lt;span class="glyphicon glyphicon-info-sign" aria-hidden="true"&gt;&lt;/span&gt;User表为空，请&lt;a href="/admin/users/add" type="button" class="btn btn-primary btn-sm"&gt;添加&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/c:if&gt;
+
+  &lt;!-- 如果用户列表非空 --&gt;
+  &lt;c:if test="${!empty userList}"&gt;
+    &lt;table class="table table-bordered table-striped"&gt;
+      &lt;tr&gt;
+        &lt;th&gt;ID&lt;/th&gt;
+        &lt;th&gt;昵称&lt;/th&gt;
+        &lt;th&gt;姓名&lt;/th&gt;
+        &lt;th&gt;密码&lt;/th&gt;
+        &lt;th&gt;操作&lt;/th&gt;
+      &lt;/tr&gt;
+
+      &lt;c:forEach items="${userList}" var="user"&gt;
+        &lt;tr&gt;
+          &lt;td&gt;${user.id}&lt;/td&gt;
+          &lt;td&gt;${user.nickname}&lt;/td&gt;
+          &lt;td&gt;${user.firstName} ${user.lastName}&lt;/td&gt;
+          &lt;td&gt;${user.password}&lt;/td&gt;
+          &lt;td&gt;
+            &lt;a href="/admin/users/show/${user.id}" type="button" class="btn btn-sm btn-success"&gt;详情&lt;/a&gt;
+            &lt;a href="/admin/users/update/${user.id}" type="button" class="btn btn-sm btn-warning"&gt;修改&lt;/a&gt;
+            &lt;a href="/admin/users/delete/${user.id}" type="button" class="btn btn-sm btn-danger"&gt;删除&lt;/a&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/c:forEach&gt;
+    &lt;/table&gt;
+  &lt;/c:if&gt;
+&lt;/div&gt;
+
+&lt;!-- jQuery文件。务必在bootstrap.min.js 之前引入 --&gt;  
+&lt;script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- 最新的 Bootstrap 核心 JavaScript 文件 --&gt;  
+&lt;script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"&gt;&lt;/script&gt;  
+&lt;/body&gt;  
+&lt;/html&gt;  
+</code></pre>
+
+<p>这时候运行项目访问<a href="http://localhost:8080/admin/users" target="_blank" rel="external">http://localhost:8080/admin/users</a> 就可以看到<br><img src="content/images/2016/05/-----2016-05-01-23-42-09.png" alt=""></p></%@></%@></user></tx:annotation-driven></jpa:repositories>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com./2016/04/24/Idea 通过 Maven 配置 Spring MVC+Hibernate/" data-id="cirjbk9h6000a0veonzgyapsw" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Spring/">Spring</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="listview-ListView ScrollView 不得不说的一些事" class="article article-type-listview" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -93,7 +1234,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com./2016/01/23/ListView ScrollView 不得不说的一些事/" data-id="cirj42frd0002cueoxrdr2xlh" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com./2016/01/23/ListView ScrollView 不得不说的一些事/" data-id="cirjbk9h400090veol7wl66u5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Android/">Android</a></li></ul>
@@ -140,7 +1281,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com./2016/01/21/hello-world/" data-id="cirj42frm0005cueothgllxq5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com./2016/01/21/hello-world/" data-id="cirjbk9gt00080veokwghrb6x" class="article-share-link">Share</a>
       
       
     </footer>
@@ -177,7 +1318,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com./2015/12/31/2015年总结/" data-id="cirj42fr60000cueo18ap7pd8" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com./2015/12/31/2015年总结/" data-id="cirjbk9go00050veoz70phmgu" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/扯淡/">扯淡</a></li></ul>
@@ -220,333 +1361,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com./2015/11/05/原-记一次接口开发/" data-id="cirj42fs3000gcueo45xj17dg" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com./2015/11/05/原-记一次接口开发/" data-id="cirjbk9hq000u0veo8fe18vt4" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/JavaWeb/">JavaWeb</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-原-黑苹果系统迁移" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="./2015/08/16/原-黑苹果系统迁移/" class="article-date">
-  <time datetime="2015-08-16T12:05:26.000Z" itemprop="datePublished">2015-08-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="./2015/08/16/原-黑苹果系统迁移/">黑苹果系统迁移</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这就是做个记录、记录、折腾，啊不，是被电脑折腾了几天。一开始黑苹果系统装在机械硬盘上的，然后感觉反应有点慢。于是想移到SSD上，可是一开始黑苹果分区170G。SSD才120G。然后就直接用磁盘工具copy磁盘行不通！然后我就郁闷了，就试了下把磁盘打包成dmg。依然不行。在用Time Machine直接恢复也不行。。最后只好在SSD上装好黑苹果，然后再在新的系统里面使用系统迁移把原系统迁移过来。。。经过一整天得折腾总算是弄好了、有钱就换苹果，哎，黑苹果玩的心累。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com./2015/08/16/原-黑苹果系统迁移/" data-id="cirj42fs5000jcueov4y7imxd" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/黑苹果/">黑苹果</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-原-Android-Navigation的使用" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="./2015/08/10/原-Android-Navigation的使用/" class="article-date">
-  <time datetime="2015-08-10T14:44:31.000Z" itemprop="datePublished">2015-08-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="./2015/08/10/原-Android-Navigation的使用/">Android Navigation的使用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>昨天发现谷歌提供Navigation这么一个东西。可以实现侧滑菜单……</p>
-<p>然后看了会文档……不知道是我没看全还是什么原因，感觉文档写的还是挺不错的，但是我也写下好了。</p>
-<p>首先。上布局文件。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">android.support.v4.widget.DrawerLayout</span></span></div><div class="line">    <span class="attr">xmlns:android</span>= <span class="string">http://schemas.android.com/apk/res/android</span></div><div class="line">    <span class="attr">android:id</span>= <span class="string">@+id/drawer_layout</span></div><div class="line">    <span class="attr">android:layout_width</span>= <span class="string">match_parent</span></div><div class="line">    <span class="attr">android:layout_height</span>= <span class="string">match_parent</span> &gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">FrameLayout</span></span></div><div class="line">        <span class="attr">android:id</span>= <span class="string">@+id/content_frame</span></div><div class="line">        <span class="attr">android:layout_width</span>= <span class="string">match_parent</span></div><div class="line">        <span class="attr">android:layout_height</span>= <span class="string">match_parent</span>  /&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">ListView</span></span></div><div class="line">        <span class="attr">android:id</span>= <span class="string">@+id/left_drawer</span></div><div class="line">        <span class="attr">android:layout_width</span>= <span class="string">240dp</span></div><div class="line">        <span class="attr">android:layout_height</span>= <span class="string">match_parent</span></div><div class="line">        <span class="attr">android:layout_gravity</span>= <span class="string">start</span></div><div class="line">        <span class="attr">android:choiceMode</span>= <span class="string">singleChoice</span></div><div class="line">        <span class="attr">android:divider</span>= <span class="string">@android:color/transparent</span></div><div class="line">        <span class="attr">android:dividerHeight</span>= <span class="string">0dp</span></div><div class="line">        <span class="attr">android:background</span>= <span class="string">#111</span> /&gt;</div><div class="line"><span class="tag">&lt;/<span class="name">android.support.v4.widget.DrawerLayout</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>昂。没错。这就是官方的布局文件。</p>
-<p>我要说的就是。这里的LIstView可以换成任意的Layout。但是要注意的就是它的宽不要超过320dp。高度必须match_parent</p>
-<p>昂。然后你就可以运行了。会有一个侧滑菜单的，但是里面就是黑黑的一片。什么都没有。</p>
-<p>然后就是注意一些属性了。</p>
-<p>layout_gravity 这个属性 &nbsp;昂，其实这个我没太看懂，就直接上官方原话好了。。抽屉视图(视图)必须指定它的水平重力与android:layout_gravity属性。支持从右到左的语言(RTL),指定&#20540;与“开始”而不是“左”(右边的抽屉里出现时,布局是RTL)。</p>
-<p>然后关于侧滑菜单里面的一些操作就可以写在Java文件中了。</p>
-<p>我在说下FrameLayout的使用好了。</p>
-<p>其实这个我还不太懂。只是知道让Activity继承FragmentActivity然后使用如下代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">FragmentManager fragmentManager =getSupportFragmentManager();</div><div class="line">HomeFragment homeFragment = <span class="keyword">new</span> HomeFragment();</div><div class="line">fragmentManager.beginTransaction().replace(R.id.framelayout, homeFragment).commit();</div></pre></td></tr></table></figure></p>
-<p>就可以吧HomeFragment添加到这个FrameLayout里面了。</p>
-<p>昂。大概也就这些。哦。还有打开和关闭。。</p>
-<p>打开：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mDrawerLayout.openDrawer(mLeftMenu);</div></pre></td></tr></table></figure>
-<p>mDrawerLayout就是DrawerLayout这个控件。然后mLeftMent就是ListView这个控件。。</p>
-<p>关闭</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mDrawerLayout.closeDrawers();</div></pre></td></tr></table></figure>
-<p>示例代码：<a href="http://download.csdn.net/detail/mcdull_lu/8987981" target="_blank" rel="external">点击打开链接</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com./2015/08/10/原-Android-Navigation的使用/" data-id="cirj42fro0006cueobomu8ldq" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Android/">Android</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-原-Android-XML文件链接错误" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="./2015/08/08/原-Android-XML文件链接错误/" class="article-date">
-  <time datetime="2015-08-08T07:40:42.000Z" itemprop="datePublished">2015-08-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="./2015/08/08/原-Android-XML文件链接错误/">Android XML文件链接错误</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在开发APP的过程中。一开始我们的美工所有按钮都只给了我一张图。然后我很淡定的都没有做点击效果。。当然啦。美工不给图。我怎么知道怎么做。。。然后。美工一次给了我四十多个按钮的点击效果。呵呵。呵呵。呵呵。然后弄了差不多两个小时。好不容易弄完了。编译、运行。完美。然后发给我们美工过目一遍。可是他告诉我说他手机上一直闪退呀。我就纳闷了。怎么会。。查了下错误信息 &nbsp;</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Binary XML file line #12: Error inflating class</div></pre></td></tr></table></figure>
-<p>纳&#23612;，这是个什么错误。然后纠结了很久。最后都打算撤销这次修改了的时候。我点了下Clean project &nbsp;然后再发给美工。结果奇迹般地就好了。。我也不知道这是为什么。。不过这件事之后。让我每次打包工程前都会Clean一遍。。。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com./2015/08/08/原-Android-XML文件链接错误/" data-id="cirj42frq0008cueou1axa1x4" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Android/">Android</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-原-关于开发过程中的一些感想随笔" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="./2015/08/03/原-关于开发过程中的一些感想随笔/" class="article-date">
-  <time datetime="2015-08-03T01:12:55.000Z" itemprop="datePublished">2015-08-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="./2015/08/03/原-关于开发过程中的一些感想随笔/">关于开发过程中的一些感想随笔</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>本来每天都是写一写技术分享的文章的，然而昨天一整天都是在修改UI上的小问题，我就随意写写这次开发过程自己的一些感受好了。</p>
-<p>以后我希望我能每次开个项目的时候就写一篇这样的博文。一步步记录下每一天的开发感受。</p>
-<p>这次开发算是比较扯淡的了。最开始不紧不慢的慢慢来。最后又出于各种原因赶工。简直累炸我了。</p>
-<p>这次算是第一次真正的系统性的去开发一款APP。发现了自己很多问题。</p>
-<p>1.代码调理不清晰。后期想修改一个功能，一直出问题。还以为是怎么了。后来才发现。是我自己代码没搞清楚。</p>
-<p>2.不懂善用开源框架。自己写的很多功能其实网络上都有开源的框架的。可是我都没有怎么用到。大多数时候都是自己写。写的也很low，所以我要总结一下常用的框架。以便自己以后不再犯傻。</p>
-<p>3.基础知识不牢固。怎么说呢。连最基础的Map数组遍历我都要去Google一下。真觉得我也是够可以的了。有必要好好的巩固Java基础。</p>
-<h4 id="——2015年8月3号-APP1-0完成后"><a href="#——2015年8月3号-APP1-0完成后" class="headerlink" title="——2015年8月3号 APP1.0完成后"></a>——2015年8月3号 APP1.0完成后</h4><p>哎。我来更新了。本来是该早上起床更新下博客的。可是因为昨天晚上实在太晚睡。然后早上一起床又开始修复bug。所以就没时间来写，其实今天真心累。今天也不知道是什么原因。遇到了很多问题</p>
-<p>1.在为很多按钮加上点击效果之后就会出现一个和XML文件有关的异常。好像是没有找到资源文件吧。完全没有任何解决的头绪。Google出来的一些解决方案也是没怎么看懂。</p>
-<p>2.OOM。这个真的不想说什么。一开始我以为只有在同一个页面内图片加载量过大才会引起OOM，然后现在更具反馈看了。好像每次finsh()掉界面但是没有释放图片资源。这样的次数多了只会也可能会导致OOM</p>
-<p>3.屏幕适配。这个、真晕了。而且遇到一个很奇葩的问题。就是UI那边给我的是1080p的图片文件。我直接随意的放到了hdpi的资源文件夹里。然后就会在ViewPage滑动的时候特别卡。放到xxhdpi的文件夹里就好了。也不知道这是为什么。哈哈哈、</p>
-<p>4.dialog。因为很多时候我的会在页面一打开的时候弹出dialog。然后我就会判断页面是否完全打开。如果打开且需要就显示dialog。但是好像在进页面后立刻返回。有概率性的会出现错误。</p>
-<p>反正约到了挺多问题的。果然还是应该先好好学习。以后要记住的就是凡是在用到BitMap之后要进行内存释放！！！</p>
-<h4 id="——2015年8月4号-APP上线第一天"><a href="#——2015年8月4号-APP上线第一天" class="headerlink" title="——2015年8月4号 APP上线第一天"></a>——2015年8月4号 APP上线第一天</h4><p>昂。我都喜欢后一天的早上更前一天的东西。。这样是不是不太好呀。不过就这样咯。毕竟睡觉之前写的话。。感觉我一下又少了好多睡觉时间呀。要不得要不得。</p>
-<p>想想昨天做了些啥。</p>
-<p>1.高德地图。居然地图抄的官方Demo还有bug。一个空指针异常的，是地图还没初始化就退出了导致的。加上了判断就解决了。</p>
-<p>2.XML文件的一些错误居然在Clean工程之后就解决了。。。好像是重新构建了索引还是连接什么的。不太懂。</p>
-<p>3.内存溢出。先是优化了一堆有Bitmap调用的页面。然后又找上美工。把所有的图片给了我三组。1080P。720P。480P三份。然后也好了很多。以后图片都要三份。要三份！</p>
-<p>4.发现我的布局文件结构写的好复杂呀。该好好看看文档，看看要不要精简优化下布局文件了。</p>
-<p>5.关于ViewPage内存释放的。发现好像我有个地方是五个页面。但是切到第三个的时候第一个的内存并没有被释放掉。。应该是要在Adapter里面做处理的。还好现在页面少。</p>
-<p>6.还是XML得问题。我太多的文字都写在布局文件里面了。规范应当是弄到String.Xml文件里面的。也方便做国际化，以后要注意！以后要注意！</p>
-<p>好像也就这些了吧。嗯。发现了好多问题。也在慢慢解决问题。O(∩_∩)O哈哈哈~</p>
-<h4 id="——2015年8月6号-APP上线第三天"><a href="#——2015年8月6号-APP上线第三天" class="headerlink" title="——2015年8月6号 APP上线第三天"></a>——2015年8月6号 APP上线第三天</h4><p>今天真难过、、肚子痛了一天。昨天晚上一点左右睡的。早上四点多就疼醒了，哎，都是因为没关风扇。还吃不下什么东西，感觉好累昂。</p>
-<p>昨天晚上发现谷歌提供了一个Navigation可以做侧滑菜单。哎，我也真是傻，谷歌官方提供的东西居然没有好好地去利用，今天读了一会文档，然后花了几个小时就把项目里面一个用到菜单的地方改成侧滑的了。然后。。有空去把谷歌的一些文档全看一遍好了。。</p>
-<p>今天还折腾了会服务器。买了个DO的vps。新加坡节点。感觉还不错。网速可以。还不丢包。。搭好了PHP和JavaWeb的环境。过明天看看做好推送服务的页面挂上去试试。</p>
-<p>其实写代码重在细心呀，╮(╯▽╰)╭。今天肚子疼，早点洗洗睡。对自己好一点，么么哒、</p>
-<h4 id="——2015年8月10号"><a href="#——2015年8月10号" class="headerlink" title="——2015年8月10号"></a>——2015年8月10号</h4><p>今天弄了个沉浸状态栏。233333.发现原来把布局中相同或相&#20284;的title提出来单独一个xml文件是一个多么棒的决定了。沉浸状态栏画了一个小时不到就弄完了。。。</p>
-<p>今天无聊想弄ss的多用户。弄了半天都没弄好。。无奈了。还废了我基本一天的时间。。。还一直以为wdcp的Apache有问题，最后居然发现是因为我自己不会用。。。23333.自己犯傻了。弄的原定今天写好的推送后台都没弄。又只能明天弄了。orz，早睡早起。早睡早起。。</p>
-<h4 id="——2015年8月11日"><a href="#——2015年8月11日" class="headerlink" title="——2015年8月11日"></a>——2015年8月11日</h4><p>看了下日期。发现我竟然十天没写过博客了。其实不算久昂。可能是最近太闲了吧。呵呵。我这人一闲起来就什么都不想干。不能闲下来的人呀。</p>
-<p>昨天吧。一直在折腾电脑。就是下了很多东西。弄弄分区什么的。但是也基本花了一天时间。哎。下午的时候看到有人反馈了一个蛮严重的bug。。刚弄好东西就赶忙找错。修复。推更新。其实心里总有种怪怪的感觉。哎。不想纠结了。</p>
-<p>其实再好好看了下MVC框架。发现自己的代码真low。有空整体得改改。</p>
-<h4 id="——2015年8月22日"><a href="#——2015年8月22日" class="headerlink" title="——2015年8月22日"></a>——2015年8月22日</h4>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com./2015/08/03/原-关于开发过程中的一些感想随笔/" data-id="cirj42fs1000ecueo98s5h4p0" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-原-关于开发Android应用时写从图库选择头像功能时遇到的一些问题。" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="./2015/08/02/原-关于开发Android应用时写从图库选择头像功能时遇到的一些问题。/" class="article-date">
-  <time datetime="2015-08-02T07:09:57.000Z" itemprop="datePublished">2015-08-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="./2015/08/02/原-关于开发Android应用时写从图库选择头像功能时遇到的一些问题。/">开发Android应用时写从图库选择头像功能时遇到的一些问题。</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="——原文——"><a href="#——原文——" class="headerlink" title="——原文——"></a>——原文——</h2><p>首先是最基本的调用图库获取图像的代码。我直接贴出来。也是当个笔记吧。事实是我记不下来。。。</p>
-<p>先是调用系统图库</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Intent intent = <span class="keyword">new</span> Intent(Intent.ACTION_GET_CONTENT);</div><div class="line">intent.setType(&amp;quot;image<span class="comment">/*&amp;quot;);</span></div><div class="line">intent.putExtra(&amp;quot;crop&amp;quot;, true);</div><div class="line">intent.putExtra(&amp;quot;return-data&amp;quot;, true);</div><div class="line">startActivityForResult(intent, 2);</div></pre></td></tr></table></figure>
-<p>然后是获取选择到得图片的uri</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onActivityResult</span><span class="params">(<span class="keyword">int</span> requestCode, <span class="keyword">int</span> resultCode, Intent data)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onActivityResult(requestCode, resultCode, data);</div><div class="line">    <span class="keyword">if</span> (resultCode == RESULT_OK) &#123;</div><div class="line">        <span class="keyword">if</span> (requestCode == <span class="number">2</span>) &#123;</div><div class="line">            Uri uri = data.getData();</div><div class="line">            ContentResolver cr = <span class="keyword">this</span>.getContentResolver();</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));</div><div class="line">            &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这样就获取到图片了。But。。现在手机都那么好。随随便便一张照片就十几MB、秒秒钟OOM报错呀。</p>
-<p>所以接下来我就改了改代码。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">BitmapFactory.Options opts = <span class="keyword">new</span> BitmapFactory.Options();</div><div class="line">opts.inJustDecodeBounds = <span class="keyword">true</span>;<span class="comment">//指定加载图片方式为只加载头信息</span></div><div class="line">BitmapFactory.decodeStream(cr.openInputStream(uri), <span class="keyword">null</span>, opts);<span class="comment">//将头信息加载到opts中</span></div><div class="line"><span class="comment">//3.计算缩放比例</span></div><div class="line"><span class="keyword">double</span> dx = opts.outWidth/<span class="number">300.0</span>;</div><div class="line"><span class="keyword">double</span> dy = opts.outHeight/<span class="number">300.0</span>;</div><div class="line"><span class="keyword">int</span> scale = <span class="number">1</span>;</div><div class="line"><span class="keyword">if</span>(dx&amp;gt;dy&amp;amp;&amp;amp;dy&amp;gt;<span class="number">1</span>)&#123;</div><div class="line">	System.out.println(&amp;quot;按照水平方法缩放,缩放比例：&amp;quot;+dx);</div><div class="line">	scale = (<span class="keyword">int</span>)(dx+<span class="number">0.5</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span>(dy&amp;gt;dx&amp;amp;&amp;amp;dx&amp;gt;<span class="number">1</span>)&#123;</div><div class="line">	System.out.println(&amp;quot;按照垂直方法缩放,缩放比例：&amp;quot;+dy);</div><div class="line">	scale = (<span class="keyword">int</span>)(dy+<span class="number">0.5</span>);</div><div class="line">&#125;</div><div class="line"><span class="comment">//4.缩放加载图片到内存。</span></div><div class="line">opts.inSampleSize = scale;</div><div class="line">opts.inJustDecodeBounds = <span class="keyword">false</span>;<span class="comment">//真正的去解析这个位图。</span></div><div class="line">Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri), <span class="keyword">null</span>, opts);</div></pre></td></tr></table></figure>
-<p>这段代码主要是利用图片前面都会带有一段信息是图片信息的。第一次加载仅仅是加载头信息。获取到图片的宽高后再根据宽高来设置缩放比例。以避免OOM</p>
-<p>But。这有有问题了。这样缩放是等比缩放。然后头像一般都是正方形的。然而我帅气的自拍是长方形的呀。我处女座就不能忍那两边留有的空白了。</p>
-<p>于是我默默地弄了两种处理方式：</p>
-<p>1.拉伸。。。</p>
-<p>就是吧图片拉伸成正方形</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> width = bitmap.getWidth();</div><div class="line"><span class="keyword">int</span> height = bitmap.getHeight();</div><div class="line"><span class="comment">// 计算缩放比例</span></div><div class="line"><span class="keyword">float</span> scaleWidth = ((<span class="keyword">float</span>) <span class="number">300</span>) / width;</div><div class="line"><span class="keyword">float</span> scaleHeight = ((<span class="keyword">float</span>) <span class="number">300</span>) / height;</div><div class="line"><span class="comment">// 取得想要缩放的matrix参数</span></div><div class="line">Matrix matrix = <span class="keyword">new</span> Matrix();</div><div class="line">matrix.postScale(scaleWidth, scaleHeight);</div><div class="line"><span class="comment">// 得到新的图片</span></div><div class="line">Bitmap bitmap = Bitmap.createBitmap(bitmap, <span class="number">0</span>, <span class="number">0</span>, width, height, matrix, <span class="keyword">true</span>);</div></pre></td></tr></table></figure>
-<p>写好测试后我立马就疯了。这拉伸。哎。不能放在头像功能这。把我帅气的自拍弄得太丑了。简直不能忍，</p>
-<p>2.截取部分图片。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> width = bitmap.getWidth();</div><div class="line"><span class="keyword">int</span> height = bitmap.getHeight();</div><div class="line"><span class="keyword">if</span> (width&amp;gt;height)&#123;</div><div class="line">	Bitmap bitmap = Bitmap.createBitmap(bitmap,(width-height)/<span class="number">2</span>,<span class="number">0</span>,height,height);</div><div class="line">&#125;<span class="keyword">else</span> &#123;</div><div class="line">	Bitmap bitmap = Bitmap.createBitmap(bitmap,<span class="number">0</span>,(height-width)/<span class="number">2</span>,width,width);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这样就成功从图片中间截取正方形部分出来了。恩。爽多了。其实这个功能可以改改的。让用户自己从图片上选取正方形部分出来。昂。我是想可以这么做的。But。还没这么干。回头写好了再贴出来吧。</p>
-<p>PS：以上观点仅仅是作者自己的想法。如果有更好的处理方案什么的。欢迎各位指出。谢谢谢谢谢、</p>
-<h2 id="——2016-1-23号更新——"><a href="#——2016-1-23号更新——" class="headerlink" title="——2016-1-23号更新——"></a>——2016-1-23号更新——</h2><p>发现了一种更好的调用系统图库获取图片并裁剪的方法.</p>
-<p>1.首先依然是调用系统图库并要求返回图片数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Intent intent = <span class="keyword">new</span> Intent(Intent.ACTION_PICK, <span class="keyword">null</span>);</div><div class="line">intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,<span class="string">"image/*"</span>);</div><div class="line">startActivityForResult(intent, PHOTO_REQUEST_GALLERY);</div></pre></td></tr></table></figure></p>
-<p>2.依然是通过onActivityResult来获取到返回的数据<br>这里因为会涉及到图片裁剪.所以需要做一下返回数据的判断.在上面获取图片的时候有进行标记 ‘PHOTO_REQUEST_GALLERY’ 这表示返回的是选择后的图片.还一个是 ‘PHOTO_REQUEST_CUT’ 这表示获取到裁剪后的图片.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">switch</span> (requestCode) &#123;</div><div class="line">    <span class="keyword">case</span> PHOTO_REQUEST_GALLERY:</div><div class="line">        <span class="keyword">if</span> (data != <span class="keyword">null</span>) &#123;</div><div class="line">            startPhotoZoom(data.getData(), <span class="number">150</span>); <span class="comment">//调用裁剪图片的方法</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">break</span>;</div><div class="line"></div><div class="line">    <span class="keyword">case</span> PHOTO_REQUEST_CUT:</div><div class="line">        <span class="keyword">if</span> (data != <span class="keyword">null</span>) &#123;</div><div class="line">            setPicToView(data);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">break</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>3.startPhotoZoom(Uri uri, int size)方法.是根据数据和设定的 size 大小来要求用户裁剪图片.调用系统自带的裁剪图片的页面.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">Intent intent = <span class="keyword">new</span> Intent(<span class="string">"com.android.camera.action.CROP"</span>);</div><div class="line">intent.setDataAndType(uri, <span class="string">"image/*"</span>);</div><div class="line"><span class="comment">// crop为true是设置在开启的intent中设置显示的view可以剪裁</span></div><div class="line">intent.putExtra(<span class="string">"crop"</span>, <span class="string">"true"</span>);</div><div class="line"></div><div class="line"><span class="comment">// aspectX aspectY 是宽高的比例</span></div><div class="line">intent.putExtra(<span class="string">"aspectX"</span>, <span class="number">1</span>);</div><div class="line">intent.putExtra(<span class="string">"aspectY"</span>, <span class="number">1</span>);</div><div class="line"></div><div class="line"><span class="comment">// outputX,outputY 是剪裁图片的宽高</span></div><div class="line">intent.putExtra(<span class="string">"outputX"</span>, size);</div><div class="line">intent.putExtra(<span class="string">"outputY"</span>, size);</div><div class="line">intent.putExtra(<span class="string">"return-data"</span>, <span class="keyword">true</span>);</div><div class="line"></div><div class="line">startActivityForResult(intent, PHOTO_REQUEST_CUT);</div></pre></td></tr></table></figure></p>
-<p>4.获取到返回的数据进行在 2 中介绍到了<br>5.从 data 中获取数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Bundle bundle = picdata.getExtras();</div><div class="line"><span class="keyword">if</span> (bundle != <span class="keyword">null</span>) &#123;</div><div class="line">    bmp = bundle.getParcelable(<span class="string">"data"</span>);<span class="comment">//获取到图片</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>不得不说的是,通过这样的方法来获取图片的话.三星手机也能够正常获取了.PS:我真的不是在黑三星.</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com./2015/08/02/原-关于开发Android应用时写从图库选择头像功能时遇到的一些问题。/" data-id="cirj42fry000bcueo3ef2d4bi" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Android/">Android</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-原-关于使用PopupWindow的遇到的一些小问题" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="./2015/08/01/原-关于使用PopupWindow的遇到的一些小问题/" class="article-date">
-  <time datetime="2015-07-31T23:57:21.000Z" itemprop="datePublished">2015-08-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="./2015/08/01/原-关于使用PopupWindow的遇到的一些小问题/">使用PopupWindow的遇到的一些小问题</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><span style="font-size:18px">记得第一次使用PopupWindow是写一个按钮点击后弹出菜单的小玩意。那时候最纠结的就是PopupWindow显示的位置总是不尽人意。那时候试过这些方法：</span></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 相对某个控件的位置（正左下方），无偏移量</span></div><div class="line">PopupWindow.showAsDropDown(View anchor)</div><div class="line"><span class="comment">// 相对某个控件的位置，有偏移，xoff 为 X 轴的偏移量，yoff 为 Y 轴的偏移量                          </span></div><div class="line">PopupWindow.showAsDropDown(View anchor, <span class="keyword">int</span> xoff, <span class="keyword">int</span> yoff)</div><div class="line"><span class="comment">// 在父容器的什么位置，gravity 为相对位置，如：正中央 Gravity.CENTER、下方 Gravity.BOTTOM、Gravity.RIGHT|Gravity.BOTTOM 右下方等，后面两个参数为 x/y 轴的偏移量。</span></div><div class="line">PopupWindow.showAtLocation(View parent, <span class="keyword">int</span> gravity, <span class="keyword">int</span> x, <span class="keyword">int</span> y)</div></pre></td></tr></table></figure>
-<p>虽然最后是成功解决了问题。但是感觉有些时候使用起来很麻烦。因为需要通过父容器以及PopupWindow自身的大小来进行计算偏移量。最后的我解决方案是直接将PopupWindow的大小设置为全屏。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Rect outRect = <span class="keyword">new</span> Rect();</div><div class="line">getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);<span class="comment">//获取屏幕的大小</span></div><div class="line">PopupWindow popupWindow = <span class="keyword">new</span> PopupWindow(view, outRect.width(), outRect.height());<span class="comment">//设置PopupWindow的大小为除通知栏之外的全屏幕</span></div><div class="line">popupWindow.showAsDropDown(View.inflate(<span class="keyword">this</span>, R.layout.activity, <span class="keyword">null</span>), <span class="number">0</span>, outRect.top);<span class="comment">//设置PopupWindow的显示位置为除通知栏的全屏幕</span></div></pre></td></tr></table></figure>
-<p><span style="font-size:18px">这时候要注意的是。你设置成全屏大小了。不可能全屏都是你的菜单吧。所以要在空白部分放上一个空的View。还要加上点击事件。直接调用dismiss方法。以达到使PopupWindow关闭的目的。</span></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">view.findViewById(R.id.view).setOnClickListener(<span class="keyword">new</span> OnClickListener() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">        popupWindow.dismiss();</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>这下就爽了。然后很多时候我也喜欢这么用了。因为我可以很任性的设置PopupWindow所该存在的位置。但是有有问题了。。就是对于类&#20284;一个ListView里面的Item点击弹出PopupWindow的。。因为弹出的PopupWindow一样。但是位置不一样。于是。我又老老实实的用回了相对位置的方法。。当然，使用的时候要学会具体情况具体分析昂。</p>
-<p><span style="font-size:18px"></span></p>
-<p></p>
-<p><span style="font-size:18px">然后是一些关于PopupWindow我遇到的一些小问题的解决方法：</span></p>
-<p><span style="font-size:18px">PopupWindow打开和关闭动画：</span></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">popupWindow.setAnimationStyle(R.style.AnimationPreview);<span class="comment">//设置动画文件</span></div></pre></td></tr></table></figure>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">name</span>= <span class="string">AnimationPreview</span> &gt;</span><span class="xml"></span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>= <span class="string">android:windowEnterAnimation</span> &gt;</span>@anim/show_win_in<span class="tag">&lt;/<span class="name">item</span>&gt;</span><span class="tag">&lt;<span class="name">--打开动画--</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>= <span class="string">android:windowExitAnimation</span> &gt;</span>@anim/show_win_out<span class="tag">&lt;/<span class="name">item</span>&gt;</span><span class="tag">&lt;<span class="name">--关闭动画--</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>show_win_in和show_win_out里面就是最基本的动画资源文件了。</p>
-<p>PopupWindow中ListView点击无响应：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">popupWindow.setFocusable(<span class="keyword">true</span>);</div></pre></td></tr></table></figure>
-<p><span style="font-size:18px"></span></p>
-<p></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com./2015/08/01/原-关于使用PopupWindow的遇到的一些小问题/" data-id="cirj42frx000acueo8xwslzfp" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="./tags/PopupWindow/">PopupWindow</a></li></ul>
 
     </footer>
   </div>
@@ -571,7 +1389,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="./tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/JavaWeb/">JavaWeb</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/PopupWindow/">PopupWindow</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/扯淡/">扯淡</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/黑苹果/">黑苹果</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="./tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/ImageIO/">ImageIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/Java/">Java</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/JavaWeb/">JavaWeb</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/PopupWindow/">PopupWindow</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/Spring/">Spring</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/TabLayout/">TabLayout</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/反射/">反射</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/扯淡/">扯淡</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/树莓派/">树莓派</a></li><li class="tag-list-item"><a class="tag-list-link" href="./tags/黑苹果/">黑苹果</a></li></ul>
     </div>
   </div>
 
@@ -581,16 +1399,16 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="./tags/Android/" style="font-size: 20px;">Android</a> <a href="./tags/Java/" style="font-size: 10px;">Java</a> <a href="./tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="./tags/PopupWindow/" style="font-size: 10px;">PopupWindow</a> <a href="./tags/扯淡/" style="font-size: 10px;">扯淡</a> <a href="./tags/黑苹果/" style="font-size: 10px;">黑苹果</a>
+      <a href="./tags/Android/" style="font-size: 20px;">Android</a> <a href="./tags/ImageIO/" style="font-size: 10px;">ImageIO</a> <a href="./tags/Java/" style="font-size: 16.67px;">Java</a> <a href="./tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="./tags/PopupWindow/" style="font-size: 10px;">PopupWindow</a> <a href="./tags/Spring/" style="font-size: 13.33px;">Spring</a> <a href="./tags/TabLayout/" style="font-size: 10px;">TabLayout</a> <a href="./tags/反射/" style="font-size: 10px;">反射</a> <a href="./tags/扯淡/" style="font-size: 10px;">扯淡</a> <a href="./tags/树莓派/" style="font-size: 10px;">树莓派</a> <a href="./tags/黑苹果/" style="font-size: 10px;">黑苹果</a>
     </div>
   </div>
 
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">Arkiv</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="./archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/12/">December 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/08/">August 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/07/">July 2015</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="./archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2016/04/">April 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2016/01/">January 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/12/">December 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/11/">November 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/08/">August 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="./archives/2015/07/">July 2015</a></li></ul>
     </div>
   </div>
 
@@ -598,28 +1416,28 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Siste innlegg</h3>
     <div class="widget">
       <ul>
         
           <li>
-            <a href="./2016/01/23/ListView ScrollView 不得不说的一些事/">ListView ScrollView 不得不说的一些事</a>
+            <a href="./2016/08/04/Android动态加载/">Android动态加载</a>
           </li>
         
           <li>
-            <a href="./2016/01/21/hello-world/">Hello World</a>
+            <a href="./2016/08/04/转-详解Java中使用ImageIO类对图片进行压缩的方法/">转-详解Java中使用ImageIO类对图片进行压缩的方法</a>
           </li>
         
           <li>
-            <a href="./2015/12/31/2015年总结/">2015年总结</a>
+            <a href="./2016/07/29/利用树莓派制作一个实时监控的遥控小车/">利用树莓派制作一个实时监控的遥控小车</a>
           </li>
         
           <li>
-            <a href="./2015/11/05/原-记一次接口开发/">记一次接口开发</a>
+            <a href="./2016/05/02/TabLayout（切换卡）/">TabLayout（切换卡）</a>
           </li>
         
           <li>
-            <a href="./2015/08/16/原-黑苹果系统迁移/">黑苹果系统迁移</a>
+            <a href="./2016/05/02/DrawerLayout（侧滑菜单）/">Idea 通过 Maven 配置 Spring MVC+Hibernate</a>
           </li>
         
       </ul>
