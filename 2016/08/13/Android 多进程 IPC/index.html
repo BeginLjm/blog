@@ -17,7 +17,7 @@
 <meta property="og:image" content="https://beginljm.github.io/content/images/2016/08/屏幕快照 2016-08-11 09.32.10.png">
 <meta property="og:image" content="https://beginljm.github.io/content/images/2016/08/屏幕快照 2016-08-11 15.42.15.png">
 <meta property="og:image" content="https://beginljm.github.io/content/images/2016/08/屏幕快照 2016-08-13 16.03.34.png">
-<meta property="og:updated_time" content="2016-08-13T08:07:54.000Z">
+<meta property="og:updated_time" content="2016-08-13T13:45:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android 多进程通信 IPC">
 <meta name="twitter:description" content="Android 多进程通信 （IPC）开启多进程在四大组件（Activity，Service，Receiver，ContentProvider）中指定 android:process 属性
@@ -186,6 +186,11 @@
 <p>别怪我写的随意…讲道理…我又不喜欢用这个…</p>
 <h3 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h3><p>我很淡定的跳过了这一部分…有空补上这个.</p>
 <p>##选用合适的 IPC 方式<br><img src="content/images/2016/08/屏幕快照 2016-08-13 16.03.34.png" alt=""></p>
+<h2 id="Binder连接池"><a href="#Binder连接池" class="headerlink" title="Binder连接池"></a>Binder连接池</h2><p>没太懂书上将的一些东西.只是大概知道一部分.主要是解决 Binder 过多的时候不至于创建一堆 Service 这个问题.每个 Binder 都单独创建一个类.实现AIDL 中的方法.再创建一个 AIDL 中只包含一个<code>IBinder queryBinder(int binderCode);</code>方法.这个方法的实现.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">IBinder binder = <span class="keyword">null</span>;</div><div class="line"><span class="keyword">switch</span> (binderCode) &#123;</div><div class="line">	<span class="keyword">case</span> <span class="number">1</span>:</div><div class="line">		binder = <span class="keyword">new</span> SecurityCenterImpl();</div><div class="line">		<span class="keyword">break</span>;</div><div class="line">	<span class="keyword">case</span> <span class="number">2</span>:</div><div class="line">		binder = <span class="keyword">new</span> ComputeImpl();</div><div class="line">		<span class="keyword">break</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">return</span> binder;</div></pre></td></tr></table></figure>
+<p>关于这个 AIDL 的调用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">IBinder securityBinder = mBinderPool.queryBinder(<span class="number">1</span>);</div><div class="line">mSecurityCenter = SecurityCenterImpl.asInterface(securityBinder);</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">	String hello = mSecurityCenter.decrypt(<span class="string">"hello"</span>);</div><div class="line">	Log.d(<span class="string">"Four"</span>, hello);</div><div class="line">&#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">	e.printStackTrace();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所以就是创建了一个 Service 用了分发对于 Binder 的调用.或者可以说是创建了一个 Service 用于查询 Binder.</p>
 <blockquote>
 <p>本文内容主要来源于《Android开发艺术探索》.</p>
 </blockquote>
@@ -193,7 +198,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://beginljm.github.io/blog/2016/08/13/Android 多进程 IPC/" data-id="cirswh7wh0000gjeomjnnpl0n" class="article-share-link">Share</a>
+      <a data-url="https://beginljm.github.io/blog/2016/08/13/Android 多进程 IPC/" data-id="cirt8jj3800015ceo1ivlpiyy" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/IPC/">IPC</a></li></ul>

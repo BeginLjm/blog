@@ -176,6 +176,11 @@
 <p>别怪我写的随意…讲道理…我又不喜欢用这个…</p>
 <h3 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h3><p>我很淡定的跳过了这一部分…有空补上这个.</p>
 <p>##选用合适的 IPC 方式<br><img src="content/images/2016/08/屏幕快照 2016-08-13 16.03.34.png" alt=""></p>
+<h2 id="Binder连接池"><a href="#Binder连接池" class="headerlink" title="Binder连接池"></a>Binder连接池</h2><p>没太懂书上将的一些东西.只是大概知道一部分.主要是解决 Binder 过多的时候不至于创建一堆 Service 这个问题.每个 Binder 都单独创建一个类.实现AIDL 中的方法.再创建一个 AIDL 中只包含一个<code>IBinder queryBinder(int binderCode);</code>方法.这个方法的实现.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">IBinder binder = <span class="keyword">null</span>;</div><div class="line"><span class="keyword">switch</span> (binderCode) &#123;</div><div class="line">	<span class="keyword">case</span> <span class="number">1</span>:</div><div class="line">		binder = <span class="keyword">new</span> SecurityCenterImpl();</div><div class="line">		<span class="keyword">break</span>;</div><div class="line">	<span class="keyword">case</span> <span class="number">2</span>:</div><div class="line">		binder = <span class="keyword">new</span> ComputeImpl();</div><div class="line">		<span class="keyword">break</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">return</span> binder;</div></pre></td></tr></table></figure>
+<p>关于这个 AIDL 的调用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">IBinder securityBinder = mBinderPool.queryBinder(<span class="number">1</span>);</div><div class="line">mSecurityCenter = SecurityCenterImpl.asInterface(securityBinder);</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">	String hello = mSecurityCenter.decrypt(<span class="string">"hello"</span>);</div><div class="line">	Log.d(<span class="string">"Four"</span>, hello);</div><div class="line">&#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">	e.printStackTrace();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所以就是创建了一个 Service 用了分发对于 Binder 的调用.或者可以说是创建了一个 Service 用于查询 Binder.</p>
 <blockquote>
 <p>本文内容主要来源于《Android开发艺术探索》.</p>
 </blockquote>
@@ -183,7 +188,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://beginljm.github.io/blog/2016/08/13/Android 多进程 IPC/" data-id="cirswh7wh0000gjeomjnnpl0n" class="article-share-link">Share</a>
+      <a data-url="https://beginljm.github.io/blog/2016/08/13/Android 多进程 IPC/" data-id="cirt8jj3800015ceo1ivlpiyy" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/IPC/">IPC</a></li></ul>
@@ -250,7 +255,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://beginljm.github.io/blog/2016/08/04/Android动态加载/" data-id="cirswh7ws0003gjeo094gds7d" class="article-share-link">Share</a>
+      <a data-url="https://beginljm.github.io/blog/2016/08/04/Android动态加载/" data-id="cirt8jj4000085ceoiyt1w6i6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/反射/">反射</a></li></ul>
@@ -458,7 +463,7 @@ public class ImageHelper {
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://beginljm.github.io/blog/2016/08/04/转-详解Java中使用ImageIO类对图片进行压缩的方法/" data-id="cirswh7zz001igjeorrxaf2v2" class="article-share-link">Share</a>
+      <a data-url="https://beginljm.github.io/blog/2016/08/04/转-详解Java中使用ImageIO类对图片进行压缩的方法/" data-id="cirt8jj5000175ceoiusk2y3k" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ImageIO/">ImageIO</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li></ul>
@@ -607,7 +612,7 @@ public class ImageHelper {
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://beginljm.github.io/blog/2016/07/29/利用树莓派制作一个实时监控的遥控小车/" data-id="cirswh7xk000ggjeoshjc4yrm" class="article-share-link">Share</a>
+      <a data-url="https://beginljm.github.io/blog/2016/07/29/利用树莓派制作一个实时监控的遥控小车/" data-id="cirt8jj4b000f5ceo5obgz8td" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/树莓派/">树莓派</a></li></ul>
@@ -646,7 +651,7 @@ public class ImageHelper {
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://beginljm.github.io/blog/2016/05/02/TabLayout（切换卡）/" data-id="cirswh7wz0006gjeo3ijguiel" class="article-share-link">Share</a>
+      <a data-url="https://beginljm.github.io/blog/2016/05/02/TabLayout（切换卡）/" data-id="cirt8jj46000a5ceoc8cib8qx" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/TabLayout/">TabLayout</a></li></ul>
@@ -686,7 +691,7 @@ public class ImageHelper {
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://beginljm.github.io/blog/2016/05/02/DrawerLayout（侧滑菜单）/" data-id="cirswh7wv0004gjeo5bqpmc1u" class="article-share-link">Share</a>
+      <a data-url="https://beginljm.github.io/blog/2016/05/02/DrawerLayout（侧滑菜单）/" data-id="cirt8jj49000d5ceoxmh3n1lc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Spring/">Spring</a></li></ul>
@@ -1324,7 +1329,7 @@ public class MainController {
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://beginljm.github.io/blog/2016/04/24/Idea 通过 Maven 配置 Spring MVC+Hibernate/" data-id="cirswh7x10007gjeof3jglw6w" class="article-share-link">Share</a>
+      <a data-url="https://beginljm.github.io/blog/2016/04/24/Idea 通过 Maven 配置 Spring MVC+Hibernate/" data-id="cirt8jj4h000k5ceo5o5nqa9f" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Spring/">Spring</a></li></ul>
@@ -1368,7 +1373,7 @@ public class MainController {
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://beginljm.github.io/blog/2016/01/23/ListView ScrollView 不得不说的一些事/" data-id="cirswh7x30008gjeoio0kyk7z" class="article-share-link">Share</a>
+      <a data-url="https://beginljm.github.io/blog/2016/01/23/ListView ScrollView 不得不说的一些事/" data-id="cirt8jj4d000h5ceo9g87squv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Android/">Android</a></li></ul>
@@ -1415,7 +1420,7 @@ public class MainController {
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://beginljm.github.io/blog/2016/01/21/hello-world/" data-id="cirswh7x4000bgjeob8p5bu7u" class="article-share-link">Share</a>
+      <a data-url="https://beginljm.github.io/blog/2016/01/21/hello-world/" data-id="cirt8jj4f000i5ceojdd3x1gz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1452,7 +1457,7 @@ public class MainController {
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://beginljm.github.io/blog/2015/12/31/2015年总结/" data-id="cirswh7wm0001gjeo89kuxc96" class="article-share-link">Share</a>
+      <a data-url="https://beginljm.github.io/blog/2015/12/31/2015年总结/" data-id="cirt8jj3300005ceo4uqzpt9x" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/扯淡/">扯淡</a></li></ul>
