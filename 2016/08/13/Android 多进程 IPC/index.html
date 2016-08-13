@@ -16,7 +16,8 @@
 <meta property="og:image" content="https://beginljm.github.io/content/images/2016/08/屏幕快照 2016-08-10 10.57.49.png">
 <meta property="og:image" content="https://beginljm.github.io/content/images/2016/08/屏幕快照 2016-08-11 09.32.10.png">
 <meta property="og:image" content="https://beginljm.github.io/content/images/2016/08/屏幕快照 2016-08-11 15.42.15.png">
-<meta property="og:updated_time" content="2016-08-13T02:17:59.000Z">
+<meta property="og:image" content="https://beginljm.github.io/content/images/2016/08/屏幕快照 2016-08-13 16.03.34.png">
+<meta property="og:updated_time" content="2016-08-13T08:07:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android 多进程通信 IPC">
 <meta name="twitter:description" content="Android 多进程通信 （IPC）开启多进程在四大组件（Activity，Service，Receiver，ContentProvider）中指定 android:process 属性
@@ -183,7 +184,8 @@
 <p>当然…这个 Uri 不是乱写的.是再创建 BookProvider.java之后是需要再 AndroidManifest.xml 里面注册的</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">provider</span></span></div><div class="line">	<span class="attr">android:name</span>=<span class="string">".provider.BookProvider"</span></div><div class="line">	<span class="attr">android:authorities</span>=<span class="string">"com.lu.ipc.provider.BookProvider"</span></div><div class="line">	<span class="attr">android:process</span>=<span class="string">":remote"</span> /&gt;</div></pre></td></tr></table></figure>
 <p>别怪我写的随意…讲道理…我又不喜欢用这个…</p>
-<h3 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h3><p>我很淡定的跳过了这一部分…</p>
+<h3 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h3><p>我很淡定的跳过了这一部分…有空补上这个.</p>
+<p>##选用合适的 IPC 方式<br><img src="content/images/2016/08/屏幕快照 2016-08-13 16.03.34.png" alt=""></p>
 <blockquote>
 <p>本文内容主要来源于《Android开发艺术探索》.</p>
 </blockquote>
@@ -191,7 +193,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://beginljm.github.io/blog/2016/08/13/Android 多进程 IPC/" data-id="cirsjz86k0000w5eov6hspil1" class="article-share-link">Share</a>
+      <a data-url="https://beginljm.github.io/blog/2016/08/13/Android 多进程 IPC/" data-id="cirswh7wh0000gjeomjnnpl0n" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/IPC/">IPC</a></li></ul>
